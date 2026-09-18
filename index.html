@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тара+ — калькуляторы тары</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAjbUlEQVR4nMV9e8xlV3Xfb51z7veeGc+YhIcxAVSwDIakgOsUDCWOA2miNn+4oqQVVPkjFS4xVqJGavqwDa6qtoALBMdSqdrExIIGQeVYAWwMFgFhF9dpMCaUSCUu4Afg8fgxnvE33z1n9Y+99zlr773249zvm3Zpvrn37sdaa++19nqdc8+lqy89HwDAzAAAIkItMDMBaIloKZq3AbwawJsAvBbAiwG8AMB5ANiQoJEmEY20S/TdeIAsKn1MDdSsM8Zl6IY8a7jZIEjS1NZicTIRETM/REQPA3gQwH0A/pSZ7wfwjKDfAejtnIo1TLTceHrPG144S+gCU2OJA8A6gLcA+BUAl8EIPYlUKkCqT4Np0/T2GuHXrlXHlVa8FJ1a5XZjUweCmZmIHgTwJQC3AriDmXftsBbAQEQscYX8mLZJiYFqBXD97Ij1ds5zAVzJzG8HcEEwqRcTnapHtOZYHk0B7KGJOQ5Om2tLKVGJVq2S7Wd9cjzMotwHJqI2GPcdAJ8EcBOAH1oaLeyhlPxqfLu2JsVwwJbjxZmcNQD/EsD9zHwtgAuIaLCuYLCTWhgr0ZCBqhMg/8I+Z1r9/nhhIR3ZtoK183iQ+DQ6IeSsXQEIRA3MHjrhDwDcHl8A4FoA98PIYo2Bnpk7R0u+puTcpBiOmDFjlwDeCuDPmPl6Zv5JwVDDzF2IM2WyNQGnwFuAGLfCpqq4U23DMIxtKcWpUag5SueNDdbKzI0VcINJGX4SwPUA/gzMb7VtDQKLm9qrSAESY9gSvA7A5wG80hJiGKvQlIQxxz/XWIv90NFoavOl6XRKGJrT6T0lFbuk3CtCQ0Sd9ftLGJl8HkZGA4xsinIpKYDTtKMW+bX282A1MS0lsVmhSQq1MhR4uGkhnhLMsS5z8IWxhFQKx763DtPg4yrwu4qrIKIOVi4wMvo8jMwGJGQ8xgAZxFL4t8OY/j3bXrYcisBSwUj4WbUAq7tuT+HCGGPu5uei+ohnZhP9euvR1z8nfdXWg0kuezCyuh0ZJXDKmxJkKPyLLeKFxsgcpmsi6XQKNl8LNEE7PsIx+/XnmuUK+ymzhioFzIyz9BYwsroYFUqg+QiX7J6LSfhLCOHPhfDU1WYEIVNzw4JUyqe5lJLwUnyFePV5aTr5eQqNTJ/AuwCwBI1KcK5lwpuesgAu6PskppPfzYpkAyIpZueYvxrhlGjtJ7jUeEm5knh8PZ4a2pVr6MDYI6KLYWQ5BoWSVqgALs+/DsDlRDSa/TnBiRw5R3Ap8xZm/CletEg9l+YFXAT8xRstP+eUKRVXaG5nLswpKDFjwcx7AC6HkWlvM4dxnCwEtTCm/nIA18AowspmP83UFD1Hmp9KoSpjBs2i1BZsgPAU6vWLiLcAZy7jkSljjp+ctSpZCz+VBmBk2MPI9HIYGY9VRWcBnN9fA3AjoohrdbOZEoC2mUVhZYKf8HSKSSMNbV4KkhtdmKPhjekcTNCZ4yFEY/9uhJHxGA84BXBR/28DeDlsNWnyN/NTlJCpUKtTm1STw9ecjAlfzGfJb4cFKU0Jtb6UFQgVI8dbyNcMn5+DBsCSmV8OI+MxK3AlwwHAcwD8Fhvqo4mY5fuVU1MTJNWkhiUFCnkIze3kcvI05AnPB3arVTYnvvMHqzbAnAEtmarhb8HIegBA7kIDA3g3gGPwr+JVQ40A5dhUXp5zA2EhpxTZOz/o00tbFBdv1ARxIUietHanfBMvMY2cBa2FDI8EI9tjMLJmAG3DzD0zbwJ4JwAmcwVqNsyJTrW20mnLjdE2ftUUM4dfs25aPSEdA+QzktQac4cjHJc6WBZciv9OAJsA+saahZ8D8FLbmb2atx9/VLPRkk4+uNN9q5yTOslzIeeiNJ7DtlTamaKVgpp6geYixXunAC+FkTk3dsAVtmO6/imIlojVwByfWQNz06S5iptSpBzUCEiMTuLI8VNSkPC9wpO7UngFYDRiByY/JCJqSxslT11thBoyfhAbGsYDId79Km4qpUvhOqBovYhjlXUF7a1possB7DQALoK5aZOZmeakXTmGctF6MoJX8NdCLqgsjdUgNKE1ipCKb+bAfuKZVHAdtJEZyi8AcFED4I0wJeDI/EvEq0JJUTx/ifKpnwM53z33pIWR+kGc9hQfWuaxqgwS8wYYmb+xA/CzK2GugCn3rjNbtQHOHHO7X0EdhPKn+JB7I5VV25NcoWyVNVp6P9sQ0Ytc22wslYT+X+KUkXjqFJfwpKL5/WZAzJy9oFVLI5cZyTbNldg/1/GiBsDz7ed9SarEVGrsfmnFoFscmcvXuKX9nPwsJIJLLaAt1ggoro6qwo8V2sV6z28AnGc/rCSV0DQdhMmdUy+I+/Sx4cbsN8iUUBsX5CzLSvWWQJFTCjMWnyec7s15HZtRK0tNnqzQd6U2/aBqC3N4rBmjWbFwU5MZjOLLc2Pka45mju7UNpW85XhtvwP+eLx/PGSyFkqL2Q+smsLVQipImwSh86OZ5xS/Jbo1oLkLv38aV3O4pCVYue6vma05EX8NaBtbUoo57iN3mt2wyuLKWbFcJZq5mk1tTaIJB5Qi7KDFQ5yeu7+gyvFVI4xVBRHPY4R85xSNmcdvEs0NgmuzkxRo8zXLrBW3Ookk5WdkmOCPicvC+gnVGZ0DB2H6Sz68ZEJTfNT4/xSOldJL4/A9XKV6QqqG0oRIcgFIOC5VyJBz5wjubJvREv6aSH9uXwlq98c70dnDlncLYRzTSAFKpLG5qy/pzllYyKTWvnKaVEe4CucqylybFjr8uTGpSD6kE2ZiIa6wPXm//0GexjAlLAUoTdOAqAGDneMx2trA+3YDM7wxttWtQLyX4NrJR0TmOzsDT/iICAy25ta8NycQGIbex5owvXP2JdyLmrRUg1pXBGCKAfYLjmjJF5UYa5oWe7unsVzu2XnG5BlBj/mOQ+bsUlrWI+GJT4BNAuRcmsDt0bGfx/mEsW9tcytae7jWFGh1k7B/v1ATzDPz/hWgVBiRn0sLa9oWp55+Ei982UU48pznGhzBQTYoSBxk88aQY68NbOMlCBzu4DshBMImgZt5MDyPCmeeGdC0Lf7qm/di6Jdw1qnm1MlDskqkH5r7lCWtiXXc4eokY0mmzawswho8ubldt8DJJ0/gFa+/DP/43/0XbO4czi7i/yd88Zab8O177sLG9g6G3riCWqHOMc/hvDm4aiwMkXUBOYbY+sccQznzP1JKKQaAZrHAU48/hotefzmu/MDHsba5hWHoJxcwnuxwpsAZun4x1luCb9Gdh4lq4SM6O3Hol2i7Bf7X17+MT3/oGqxtbGHok7dQiKXHvjsVvefbUzGNTq9Mw7x2wPRwg+TpDUjPTqcyCtZ2Czx94jhe+fqfx7s+ePMo/KaRz0SiWEJiEeHbMVgTLaMg7EoaqcCTp582UMwehgFt2+GJHz+Kj7/vPWi7Bagh8OArgCbEMPXKpW75yqce5NR6kpRsi8/zqemr6deg7RZ4+onjuPCSN+NdH/w41rd2jI/1hD8fUiljslglUk01nbXW7Q+vvxrHH/4e1jY2IuHL8dppn5O3F1YnZ8+cG9NuIMqdNZFs1JfINXNEAaDtOjzz5AlceMmbceUNf4iNUfjx5YmDqALW8KaN4aFH07b47H/6AL7x5c9i+8gx9MtlYnYdMPa/ptL0Mn5rCVOTtQJM6OvZpmHuVY7LBSBt1+HpE8fxstf8TSP87UPghPAPEmo33Y0b+h5N2+Ev7v4S/uRj78fOkWPoeyN8uT/hXhUVLThwEjwrpOKRdYCYb23uRCe0HuxfC5DMl3L4qMqUZNiHtu1w6qkn8fLXvgFX3nDLKHzKCP9sFaVy9Fy698SPHsbN770KbdeZ9Q2DGthpfPpBsRtT5m/6kOMxjyNXOZX96nNjNGUo1cm1+SE0bYennziOl7zqdfgnH/oEtg6fgyEQ/kGZ+xyfJRrO7w/9En9w3W/giR89gsX6ZtLvS9xuvhZv1OixP0fPwOrnx7zJz0SFp33NMZk5wTPzWOR56asvxpX/4RZsHTpio32fhYM87ZK+xK+dVMm/Mf0t/uRj78cDX/2CUdR+GeHT3KSk47tFN7eeV9PgZwnhX3F+AbKVwP0IQzLSti2ePnEc51/wKlx5wy3YOedc7J3ZRdO26PulV8UnBHn7xA2atj47YOaxSDMW91J7Y/NcImDZ91isreOBr34Bn/3YB7BzzjFP+IAVvLsw4ea7hzCLhYzrYs5ajxB3sJIotghdsVaKHs28u+eHh2gOkFGAEOmqppmaBmd2n8WFl7wZV/3uH2GxvgEAWKytr4Svmq4NNudC03Z4/JHv4+PXvwfd2hq0Agwz48ypk2CW9+LF49y+dYsF2m5xIO4td+rV+gGzx1c4v9O0KhR4ie3w4kaooW3b4dwXvAi3//6Hsbf7rDnJYXXQffbaCdQQ+r09HPmJ5+KyX33XiDNXWiYinDl9CnfechN2T520lsMX0GRlpqPqgtHv3PsVPHX8x9jY3omLPcOAxcYW3nHNR4x1GIYRd8iTKyD998/+Ee7+41uwsXMEbK8i1pRxS9VDtU+YT4MnPZ654mLQiFzJBvSKlRJ0tC3uue0TWO7tWpPEstaapg1jQXZPn8KLLvzpUQFqHNOZZ0/jjps/gqcf/zG6bmEE5XRgNNkCl9iUtY1NbG4fUi/5DgC6xQIXXfoLWN/cruAEePCB+8arm27ZpaBaLUghHc2LyQX8/vhORqua5pWuE9TECcyMzZ3DpnwaoAvOJTzBGA3A+uYpbB8+Oml3lqbBQU2DnSPHzLWGto3pykgbftzBw+AJ398TE1ucevpJLNY3/BQ28ARDv0TTddg7swtXtq1JIYv1AbnaSDHs+okgohCBx58f1QE0JchBfV7dj18/TQUtGjRNg6HvTUBXE5ROOoS+X6Jf7kX43Un0aYZ19din21EAEZqmRdO05gJykMZSY9cERtO0Yo0CT+KgTYLTlSD87LtePYjM4cteDcxp6yoBTcq01ZWPZYEkThOmqDfWehdX5JRtCubMhzE+ELyPWCU/mZybxBtNrKEAA45E6hhXDsfMwHKlP7idg9cYZtdea8qdmm6Ei60um2pjEnl3npH4C6Mps0tKmxtPI/05KTIlXZcehMdDkweOqM4zJkANAjWNS43RNiLNSOa0JE5nbKrrYDKH5J/YDK2I23AcuYxhJj8V/JMLjr1pWhqeUiLdzJfAuyNIO0WlapMznXmL4AJNj+0iw/utCqawz4lvggZogdWqfMRAsI/vi3soDqBjKvOUgDn8wYiMr5GTpK+tqavrgoxppVKfVWAiKYV2NqC8DhE9FPAYXqWr8veOxz99b3yXF/UqU0YXMJoZRWCpCx2s9IdQmyYWIWGdsrTHdKicU0s6SZzkav+iDOzS1kwdBPY2d/cHYLwHKRTvGGMUDkN+X1NR/4TLpaTd1FAXlEW15vxolZE5QHDBl6+EqYsw0xjA3+a0VXPQNObaRG+jKnMgMM4lajAMPfrlmSrexxi877E8cwbLvWfH+whZ1ObJ3ZTGsFJidIu1ca36+sL9l2usd61REFhl/gt9ojXJxBzzbgLBYUz/qjMHG7UrB0odv1yewWJtw7vb122sWV8D5gHrW9si95/MdpRVWJrrW9s49vwXYufoczAsl16JVnpuAoF5QNN2ePKxR0drXHfYcnutB+ZeKTgV7GkFi1ztvxa0yqNGa8q7a0FsKdvn8xZ5abDc28X2kWO46qOfwpGfeB6G5RJk7030bhq1hZ+tQ0fGFsd7uL6268DM+Lm//+t409/7NUhRhzwTEfrlEov1Ddz1yf+Iz3z4WmxuH7aWgpJCzO6EGnxPfUDF1UCtYucJX1m8xoTmDkJrUvRzVTsQ8ulTTtFa7u3hV3/nAzjvr72iggZGHDmX6Nq6tXV0qLv6+dhDD+Jz//kGrK1vir1P085Zh1JsFmcByqDQ10ZIxT7mLYHIYyvTzYAZnWhmvCzRptbRdh1OPnEcv/CO38BP/62/jd6a6NKfxJHKXsJDA3ZWKfgbBvS9oftf//0/w6knT6BdLLLrnFNIC+s6kt/kjwqGk+VnfyO9mZG19nH5vjEcp1fzIAzwhKcWRjdi+ZPQtB1OPf0UXvbaN+DvXvk7451AUvFTfxr/KRj7RPoscTGbS+Z33/YJfOPLn8PW4aPTN458TNHaaiBXfXUPi1bNl9SY8LNOyFcIbRzNrKQRAU3hSTYqHdMBiPzBWwcRlntnsHX4HLzzmo+gW1sfA8y5Mc3ccra0DO6eyBM/fAi3fvR6bGztjPcMTPs9rlTF6fFLBHPJ3bjd0kqqfjxaKsic6lwcGPn9cwo/YcKTozPis/9PyittAWH39DN42z/9N3jeS15uTr91GWH8Mxe0w5QcZ7+A+pkPX4snfvwIurU1f7zIGOrouYhHJMAc2tAJ1LuCS4uJCc4MTxO4dUHqxZo0cPw2GN92C5x88nG86YpfwyW/9Db0y2V0v2GpzuBRLChKKlZw3zu4785bce/nP43tI0dF+jnvsAlmhMkQsUiCxeirYR5RcRJG5iMT6Z+sMkTntzBewZ3dcFLfjk1Ni9Mnn8JPXfgzuOI332e+kNI2Vac9e5JnjHOBHzWEk088js986Bos1jbAQ6ZYtYoyePxo7lipBMpOZlmmEAtYmRWPgFdl8+lO7QzFhNVEvsoHIsLQL0FE+Af//INY39xGv9yzN3YMwU1irL5nG5K2bfpuunAvh2EA2L/IMww9usUabr3xX+P4w9/H1uEj3umPcFUpKGB+ACbPzzgehauBk8bWIaxh0BQ9FKQBa1EwphqC0rUAHx8RYXlmF//ovTfiJa96HQCMJdeDAo0nE1v43rZpW3zra3fiq//tZmwdPmcM/BznWqFNW6srIfsFH6m4WWb9i0EpKAk8K4ixhEUA6SmgVn4eFz2NkjMAlH10SGroe2wfOYq/+uZ9+O79/wOyHh/CdPJg+Z+wtd0Cv/zrv20EF/AueXJfc//mV+7A//zSbVjf2hZ3GRP+4u4vGgWU1wVoSqVLbsnPEqQM0vNCnN5DolKC1Orc1VZAmHQiqwRESQtQF3lXpF3BKJf6nXn2NL54y++ZjTYdlk2K4huzRMMrw7mQHps7h/GWd14lxiVu2BwYaID//ef34I4/+CgOHTt3dEHDMGBjaxuLtbXxAZMh3fo8X6xR8KSP9fEmbwoNJ8Wr45FyqRQs44hxbkA3xajb+BqhR2llYtzO0XNVehNrk1KMygv7HYXlEhvbh6I4JLcHa1vbOHT0WPQto6HvTR0gkSXkoLhvmcMsx3U+IiMo7eJMyKQ7PXVFEIe7HiRfjHQuLBeqnURtm8Jgy1mD8ARFbQOh73v0fT+5D09JfZ7GkzkMWC73MPRL9MtlxOc0Xr9vMtoPtcBWt79hltfIjlyhJl3VS8OcUiURpVWE4ZnrcG40GBiFUrMtYX1fq9qNny327JggW3L2i1lX0hwux184poZ+CmR8FT0sOoR8QSRfkKktpoxkSxF90dVMPDnRO99eA+GJ06qBo4fwyWUhd5CSKVqlPy+73zyMCpASfugCxtPq0dWYyO1MqM2wBaxMASVhDr0xCoxX4QowK7VVQyL2XrU5tRRmBdkJPoC6NSWvBoZ+1eCVCP2vS9UwJFoRb0cGR4Cnbmuc38ibR62KV74mEVsVzW+LTnWOo5f7LNtSfJUOr9bnwPtuYB55uDF1kXlaC3VTGDFtpG/kOftkBLgoLnhp/rW25GtbdcpeEasun0/Rl22lLG1OPMHMugsomjPTW+taIwZmzohdzqrmOnNSauIftrSTKh0Ek0EvIoVU6OlzpevNrD1jPeR7yadaCEoxMF94Mfi4XX3Adwla7GHez6M1W9WSwovTJx4G88cD2Jp4N2KwKSIPA5gGyAdQ5/ZxVd8/zivxrYB3RSOsjnntFdFrbgN1cBoZ8z7iECnVOE6bkCSRPxW1aRczTyrK5hkC1DQgJYxy49wDLxcL/37A3N7N30PB3woZQXxJK7FhTjkoaD8ISJ1yZsZ4cUsKoD6cHieYTCO9Nn26HsAOQ4//8+0/x84550IPaM2a+n6Jtu1w/NEf2DuM/ThH89c5Xy+X5LpqrUbK8nSatqeYDE+eVqmaa8JG5bIJtscoidzJo4VRoFl6Y/SN+f5gRBEGYA32zuzipt/8hxM/wsRL2tJybO4cQj/+BsLBwRzXLGXr3nf1xRpOal9YOq4xRWGaqS7GFWNgPOww9CDxwIUS3zQxquOXi1FOci4W0p47FFlJorFyVGN9wn2ojYOqlEocXnIHAxXPCPJLpAqjEROVWfoc98EDAEZjb8IwTwtB4aHS7rv8BSUT40uQwhNaSXZtFbFULu8/UFCzEqDRCiFmvP4jUlGmEOSVoZJouFOgzhkY7WIdjz/6A3zh5t/F44/+AE3bjsJ399Mr2BLeWREYx2VfV3wqRey11nM/pj/iLbOPc5WnCRdfY75ryo0pxZoPjKZpsHvqGXzqg/8C//Ydl+Pm916Fb99zF4a+R9t2IDLuIXyqlykewRNwjnfP1M5cn2zP4c3N1fBoLqI0T2lVx3LoAvarqakY4EDqB02DnaPnYvf0SXzt1ltw922fwE+94mdw8VuvwF+/7O/g2PNfONIa+t7QTCxlVOQSzRnrSEftvsLVCr+mLQc+P4nKJqg+BphPtAw1EawcM/Q9iFpsHjoMAuH73/kmvvuNr+P23/8wXvn6n8ff+KW34YLXXYqmbdEt1qbbrxR/bBmOPyuRsnYKa7Kn2N9PrjgVQ6QqkqtAWR5ksoAwmk8xkkI+1yfNWVA8n+0/xvrGJja2trF7+hl87Y9vwdc/9ymcf8Grcckvvw0XXPxGUNNG82vTJu3015zg1J5oKVipwKZlCY6HcP9jvip+ToYAuvrS8zlkJseY5kNrNVlbpFxAak7YF/FChKYx9/afOX0Ky70zOPKc56Ff7mG5dwbmyRxlOhpvIY+1UFK8Ei6vFiL41oQe4s25Iz9byzwfILVRWlaQJ+TjTynJXP8a1gvcbV5rm1tY39rB7qmTYzHG5OHl058/UfliF1v7HgaPpX1K4Rt5TShN+L42w5rWZtPA3KTR5HlC0wtACL6IGAq3xl1keQhwa1EyAPOY1345fss3nFfCnRor52jpIVFUC1TnavhrDkKpXXMN2tywr+pBkXKKnC+JxuOm+9u1YCqi4Y2p87MhHxJqgsvU/Fz6lYoFcgqjvYbglCqVMubSTjN//kFjLjwgIjVJ/xxHxxrPOXMn53mbnDGjJdwHAb7A86leTV8tn6usxxWwNEulBYrx18MrmNJ8UW10reHK+Uc70KOljQlNoUZLe5+lC3cyJR8pgXqm0euL+dZpzxW4DBHGQyP4jseHbkv7evgK9+9LJVjF1+dMbmneHMj5/BxO10QZml4zu9EpiN1IjXvUBDgZyfoMY+SC2VwLoJj7avB9kK/dtX5IRqjJOTPN/0G5g1w2kJ4ElPZR+vyz6RJySkZE5ZtC60GaY51gNCMIekJ34GUZK/J30HHBXDeXgoPkK0w1pWvN1S+cBSiuqCZNmWPS5owB4rNUm/OeraCwyENg0RixkHQ8890v4MdhuWwmpEdE7J4mlIU5gi1bk/k+GFy+Ypnf2PTYOQc6pF8d/SvCH0+nPwuY8cidOYFtohBHDYCHLFHO+uAyOyvO8yFVrCkpVknzQ/zThqRpl+ik8NduIRHZO4o9DEjFD3OLRGGfeO/ePNQAeMR1y4GhMpSVI07bVKjQk1TxI81DvfLlM5XV8KT6S/MdRVfEqYEwYK4r/kQ397iBjzQAvofpK49FhstAIg1SsospqY5mMuKi0NiX9esHFZiV+uvjmlJw7fviOsui0apTNA4Vhm3f9xoA96QQJlOr4kZYM0bAKGhqtGTZx5+gy4Ci5SkelHavUEOq49esy5y4IsBWNypwR/7aUvUG3TpqbdqhCWKAezoAXwGwBHOLDHI7w2xmrSuYqHpGJp2akD7f0k1rO3kvStrg8ycqZhOL5Q09G/m6LNvWuhQnhlo+pCJYOg2AJRF9pQHwAICHObn7gtmA8eyJICEN9gMbmaNyKByFRtnsW/ze9LOXAkre5o6pUyqznlT6PTe7lXUBImJmJmZ+GMADDYCTAO40NLgvRZrVFaywLJhgTOLOjamGHP+VAsvtgRoc+6PGd3KPtNhAVlFVfsVrzT6UFNLi6ImIiehOZj7prgV8mkyvenWwpMU1p03DUS4w1fp5zfYnXFEG8hlCwTUmeUvDpDxzg9h0cacCk6v9fFp+uIuZvwuAiMh7ZlmoseomqLWbktLEOX6oECWXL6glBubpSz7DYklq/CrVxXBtki5Ca5Lgwbc8/lwvyEvwYOe7x5V+l5nvggnN0QI4DeBmmGqQpwCz0r99wKw8eFaxKl8kmStQ3xfXzXVZTMq6pEq5Gk3vPdXfZ2hxOwW4mYhOA2gbZu5NP90I4HEALRtQtVYVVBDklZipAe3UzMFbThfrq4cOXy4tTMYNcMUe3ZeXaGahQoFF3MIwh/1xADdatvrGjOGGmR8DcIPr0JDVaGiJcU6M0U5HOlWUr3l8Y049MzVzrymTXHKLjp1UbSOEtLn36XltFWsRc3o75QYAjzFzA4Bd0DfAfE/w/QD+EuZbw8OcyNMXXJPuE4xpmUViFZLi+Op7g6T3w5SKHlxqGGYE8clOz3Pja5QiazESv6SiWKYB5lkQfwng/TCyHoho/MkYtlnAGQDvJlMq1Gy9ymTEWEWfa68JFlM+n8jVpXh8zUOskCm+3KusWaTGZDCNmpCzbJorkXT1wHuWa2Mr03fDyNh6Jf+m0J6ZOyK6E8D7YPzFXrSgAkG7jCRzEocLjvYDmpUpwVyaqSzFvaZpTyZKFGKCOelr+Gk+/bTXpx/N2YOR5ftg6j0dRhdP0S+GLO3g6+zgBSIlqAQijRlI5ZC9qaAPyG9yuHlnC0oKVtsfu4xyYBmvP8iE5N4RSeuwByPDOwG6Dka2S4mnUQi4VOHtAO61CMSkWshXlqUPjTV+/gkNcev8lMbosN90EfDXVkrXSu+jObLf/cSukdkCRoZvB5hgZOuBFkUwMxOA4wDeahF0sJagbuPKqUm+rRwBl3DH9YJyrBEGduHYXNRfk46ZuXm+5+JNwB6MzO6FkeFxCL8vcasPi7YFgwbACUxKsACwFzOUMvNcnXqNQhs/zzuhlmelsUxT+1yz6ZMipCt2KYVK4SvxWbknzuw74Z+AkeUQ0gmDwBBCJbjdIh7gmZKQKWeK0hW7ZFYQtcxTAonfCWf+nDoXMkHasswvWqX5qhD+AGoGGBndDit8W+OJTL/DF/1sXEBIKsEvAniv/dzA+BglLxz/s4ScHvgCqamIOVbmqEHtps8vaOWVuVQpzPK1QpHKZ4yWADXgoYGR0S8iOPlyvsTh/WBEOEgUEciOvc4i/xaMjyEYRRjEZIyb5SJSAlRdiXxqrWWIodbUlsan0zBCqMTBxChWcHQoOBTR1DKzmgINMHtPAHcAfwtGNtfBXuRj5gGUj5+KPxjhujBVk24H8BoA/wrAj0DU2ZKUY8g9l8UwLhcY8RFuqItB0iZ5siYBpkCBR0SF26xz1TyfT57+iDwPx6x/oc6tQ8+IZgR3k2INNlV3lrkD8CMYWbwGRjad7Weiiq+sX33p+Q55rclqMV0reC6AKwF6O4ALRm0nAhi9QcIwXzhkihbu9sVLieOihhmS8suZU+82f1yXlVqgLLkT4g2XwhxLy6vFKRXAsFG7reKFD0X8DoBPArgJwA9tm5QN5MaGsh2V/upLzzfmS1IunggQQA0Ivd2hdQBvYeZfIdBlIHoxmEXOIwNCqQDx6R/HUTO+n8yo5EAKQ8wPx0iyHr64LqDHBeSRMh/SAa5cjYh4Ih5WAAbwIEBfAuFWMO4AeNf2tSAaYhPunSzzLhjS2dZRGDVFD2ZmIvT2Ww0tGLsAbiPQbQC2mYdXE+hNPAyvpYZeDOYXMOM8IjDANMpYXaMLI/zAVV/alD6OS7VrofHkT1mJPM2yLAvIYM7idzJz35xzwrf3VDidI5JzaFJWFvoCgaMMjumHmPlhInqQme8D6E8B3E8NnnHEbem+hynjj/z4qFKfzB78X50o3KcJ/lQPAAAAAElFTkSuQmCC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Палитра и токены — "бумажная обсерватория" (см. превью-артефакт,
+       одобренный пользователем): почти ахроматичный холст + один оттенок
+       коричневого (--accent, Umber) вместо синих акцентов референса -
+       заливка CTA-кнопки и все остальные акцентные касания (фокус, ссылки,
+       чекбоксы, hover-обводки, eyebrow). Более светлый --accent2 (Amber)
+       использовался раньше для этих "остальных" случаев - полностью убран
+       по замечанию пользователя ("снеси старый цвет полностью"), в разметке
+       и в палитре больше не встречается. Тени убраны везде
+       (--shadow-sm/--shadow-lg = none) - элевация через обводки-волоски и
+       тонировку фона, не через box-shadow.
+       Text/border palette (Midnight Ink/Slate/Frost Border) - как в самом
+       референсе, без изменений (правки пользователя касались только фонов и
+       синих акцентов, не текста/обводок). */
+    --bg: #FFFFFF;
+    --panel: #FFFFFF;
+    --panel-hover: #FAF6EF;
+    --table-header-bg: #F6F0E6;
+    --ink: #091135;
+    --ink-soft: #36394A;
+    --rule: #E1E9F0;
+    --border-input: #E1E9F0;
+    --border-btn: #E1E9F0;
+    --secondary-hover: #F6F0E6;
+    --accent: #8A4B26;
+    --accent-hover: #6E3B1C;
+    --accent-wash: #F1E4D8;
+    --ok: #2E7D32;
+    --warn: #B7791F;
+    --warn-wash: #FBF3E4;
+    --error: #c23b2c;
+    --shadow-sm: none;
+    --shadow-lg: none;
+  }
+  *{box-sizing:border-box;}
+  html{overflow-x:hidden;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size:16px;
+    letter-spacing:.015em;
+    line-height:1.35;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 80px;}
+
+  /* Навигация «Назад» / «Главная» - вверху страниц выбора ГОСТа/типа и самих
+     калькуляторов (везде, кроме самой стартовой страницы - там некуда). */
+  .top-nav{
+    display:flex;
+    gap:16px;
+    margin-bottom:20px;
+  }
+  .top-nav a{
+    font-size:13px;
+    font-weight:500;
+    color:var(--ink-soft);
+    text-decoration:none;
+  }
+  .top-nav a:hover{color:var(--accent);}
+
+  header{
+    border-bottom:1px solid var(--rule);
+    padding-bottom:20px;
+    margin-bottom:32px;
+  }
+  .eyebrow{
+    font-family:inherit;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+  h1{
+    font-size:30px;
+    margin:0 0 6px;
+    color:var(--ink);
+    font-weight:600;
+  }
+  .subtitle{
+    font-size:14px;
+    color:var(--ink-soft);
+    font-family:inherit;
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--rule);
+    border-radius:12px;
+    padding:32px;
+    margin-bottom:24px;
+    box-shadow:var(--shadow-sm);
+  }
+  .card h2{
+    font-size:16px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink);
+    margin:0 0 16px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--rule);
+  }
+
+  .inputs{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+  }
+  /* "screen and" на всех адаптивных breakpoint'ах ниже (640/700/480px) -
+     без него эти правила совпадали бы с теми же именами классов и внутри
+     печатной области (#printArea .spec-row-diagram и т.п. используют те
+     же общие имена классов, что и экранная вёрстка) - ширина печатного
+     листа A4 (~733px по расчёту в common-print.js) достаточно близка к
+     700px, и на части систем (другая трактовка @page margin/DPI при
+     печати) реально может просесть ниже порога, из-за чего чертежи в
+     печати непредсказуемо переключались на мобильную раскладку (в столбец,
+     на всю ширину листа) - по репорту пользователя. */
+  @media screen and (max-width:640px){
+    .inputs{grid-template-columns:repeat(2,1fr);}
+  }
+  label{
+    display:block;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  input[type=number]{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid var(--border-input);
+    border-radius:8px;
+    font-family:inherit;
+    font-size:16px;
+    background:#ffffff;
+    color:var(--ink);
+    -moz-appearance:textfield;
+  }
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{
+    -webkit-appearance:none;
+    margin:0;
+  }
+  input[type=number]:focus{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-color:var(--accent);
+  }
+  select{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid var(--border-input);
+    border-radius:8px;
+    font-family:inherit;
+    font-size:16px;
+    background:#ffffff;
+    color:var(--ink);
+  }
+  select:focus{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-color:var(--accent);
+  }
+
+  .comment-field{
+    width:100%;
+    min-height:110px;
+    padding:14px 16px;
+    border:1px solid var(--border-input);
+    border-radius:8px;
+    font-family:inherit;
+    font-size:15px;
+    line-height:1.5;
+    background:#ffffff;
+    color:var(--ink);
+    resize:vertical;
+    box-sizing:border-box;
+  }
+  .comment-field:focus{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-color:var(--accent);
+  }
+  .comment-field::placeholder{
+    color:var(--ink-soft);
+  }
+
+  button{
+    margin-top:20px;
+    background:var(--accent);
+    color:#ffffff;
+    border:none;
+    padding:12px 24px;
+    font-family:inherit;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.015em;
+    cursor:pointer;
+    border-radius:8px;
+    box-shadow:var(--shadow-sm);
+    transition:background-color .15s ease;
+  }
+  button:hover{background:var(--accent-hover);}
+  .action-card button:first-child{margin-top:0;}
+
+  /* Secondary — второстепенные действия (см. design.md: белая, рамка, hover-фон) */
+  .btn-secondary{
+    background:#ffffff;
+    color:var(--ink);
+    border:1px solid var(--border-btn);
+    box-shadow:none;
+  }
+  .btn-secondary:hover{background:var(--secondary-hover);}
+
+  /* Обёртка вокруг трёх взаимоисключающих статусов расчёта (calcCheck/
+     calcOutdated/calcError - JS переключает между ними класс .active, см.
+     setCalcStatus() в common-print.js). Все три - в одной grid-ячейке
+     (stacking) и visibility:hidden вместо display:none, когда не активны -
+     в отличие от display:none, visibility:hidden всё равно занимает место
+     в раскладке, поэтому ширина обёртки всегда равна ширине САМОГО
+     широкого из трёх текстов, даже когда ни один не показан (до первого
+     расчёта) - кнопка «Печать» не «прыгает» вправо после первого расчёта,
+     то же расстояние зарезервировано с самого начала - по замечанию
+     пользователя. */
+  .calc-status{
+    position:relative;
+    display:inline-grid;
+    margin-left:14px;
+    vertical-align:middle;
+  }
+  .calc-status > span{
+    grid-column:1;
+    grid-row:1;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-family:inherit;
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+    visibility:hidden;
+  }
+  .calc-status > span.active{visibility:visible;}
+
+  .calc-outdated{color:var(--warn);}
+  .calc-check{color:var(--ok);}
+  .calc-error{color:var(--error);}
+  /* Значки статусов - SVG вместо символов Юникода (✓/⚠/✗): те менялись по
+     начертанию от шрифта к шрифту и на Windows 7 частично не отображались
+     (тофу-прямоугольники) - по отчёту пользователя. SVG рисуется одинаково
+     везде и выглядит строже/единообразнее для всех трёх статусов сразу. */
+  .calc-check .mark, .calc-outdated .mark, .calc-error .mark{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 20px;
+    width:20px;height:20px;
+    border-radius:50%;
+    margin-right:6px;
+  }
+  .calc-check .mark{background:var(--ok);}
+  .calc-outdated .mark{background:var(--warn);}
+  .calc-error .mark{background:var(--error);}
+
+  .print-btn{
+    margin-top:20px;
+    margin-left:12px;
+    padding:12px 22px;
+    font-size:13px;
+  }
+  /* Значки печати/PDF на кнопках - тоже SVG (тот же повод, что и .mark выше:
+     эмодзи-принтер 🖨 и стрелка ⬇ не отображались на Windows 7). */
+  .print-btn .btn-icon{
+    vertical-align:-2px;
+    margin-right:6px;
+  }
+
+  .summary-row{
+    display:flex;
+    gap:24px;
+    align-items:center;
+  }
+  .summary-row .summary{flex:1;min-width:0;}
+  .box-view{
+    flex:0 0 280px;
+    width:280px;
+    height:auto;
+    display:block;
+    border:1px solid var(--rule);
+    border-radius:12px;
+    background:var(--panel);
+    padding:12px;
+    box-shadow:var(--shadow-sm);
+  }
+  @media screen and (max-width:700px){
+    .summary-row{flex-direction:column;align-items:stretch;}
+    .box-view{flex-basis:auto;width:100%;max-width:280px;margin:0 auto;}
+  }
+
+  .summary{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .summary div{background:var(--panel);padding:18px 16px;overflow-wrap:break-word;}
+  .summary .label{
+    font-family:inherit;
+    font-size:12px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  .summary .value{
+    font-size:24px;
+    font-weight:700;
+    color:var(--ink);
+    font-family:inherit;
+  }
+  .summary .value span{font-size:13px;font-weight:400;color:var(--ink-soft);}
+
+  /* .summary-row переходит в столбец начиная с этой же ширины (см. блок
+     выше) - плитки "Наружные размеры"/"Расход"/"Норма времени" получают
+     втрое меньше места, чем рассчитано на 3-колоночный грид. Складываем
+     плитки в один столбец сразу здесь, а не только на совсем узких
+     экранах (<=480px) - иначе в диапазоне 480-700px длинные значения
+     переносятся по цифрам ("1088" на "108"/"8"), хоть и без обрезки
+     (minmax(0,1fr) выше уже не даёт им вылезать за пределы карточки). */
+  @media screen and (max-width:700px){
+    .summary{grid-template-columns:1fr;}
+  }
+
+  /* ============ Шестерёнка настроек нормы времени ============ */
+  .time-tile{position:relative;}
+  .time-settings-btn{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:26px;
+    height:26px;
+    padding:0;
+    margin:0;
+    border:1px solid var(--rule);
+    border-radius:8px;
+    background:#ffffff;
+    color:var(--ink-soft);
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  /* Ховер - заливка var(--accent) + белая иконка, тот же приём, что и у
+     основной кнопки/CTA (button{background:var(--accent);color:#fff})
+     - по замечанию пользователя ("шестерёнка становится белой по версии
+     нашего дизайна"), а не просто окрашенная обводка/иконка, как раньше. */
+  .time-settings-btn:hover{background:var(--accent);border-color:var(--accent);color:#ffffff;}
+
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(9,17,53,.45);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+  }
+  .modal-overlay[hidden]{display:none;}
+  .modal-box{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--rule);
+    border-radius:14px;
+    box-shadow:var(--shadow-lg);
+    padding:28px;
+    max-width:380px;
+    width:100%;
+  }
+  .modal-box h3{
+    margin:0 0 20px;
+    font-size:16px;
+    font-weight:600;
+    color:var(--ink);
+    padding-right:24px;
+  }
+  /* Без hover-эффекта и transition (по замечанию пользователя) - крестик
+     не меняет цвет и не анимируется при наведении. */
+  .modal-close{
+    position:absolute;
+    top:14px;
+    right:14px;
+    width:28px;
+    height:28px;
+    padding:0;
+    margin:0;
+    border:none;
+    background:transparent;
+    color:var(--ink-soft);
+    font-size:16px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:none;
+  }
+  /* .modal-close - это <button>, а у обычной кнопки есть общий button:hover
+     {background:var(--accent-hover)} (тёмно-коричневая заливка CTA) - у него
+     специфичность (element+pseudo-class) выше, чем у одного класса
+     .modal-close, поэтому он перебивал transparent на hover. Явный hover
+     здесь нужен не для эффекта, а чтобы погасить чужой. */
+  .modal-close:hover{background:transparent;}
+  .modal-field{margin-bottom:20px;}
+  .modal-field:last-child{margin-bottom:0;}
+  .modal-field label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  .modal-slider-row{display:flex;align-items:center;gap:14px;}
+  .modal-slider-row input[type="number"]{
+    width:64px;
+    flex:0 0 auto;
+    padding:6px 8px;
+    border:1px solid var(--border-input);
+    border-radius:6px;
+    font-family:inherit;
+    font-size:13px;
+    color:var(--ink);
+  }
+
+  /* ============ "Прыгающий" ползунок с фиксированными остановками ============
+     Свой виджет вместо нативного <input type=range> - см. createJumpSlider()
+     в common-timesettings.js: нужно было и анимированное (CSS transition)
+     перемещение между остановками, и круглые отметки на треке - ни то,
+     ни другое нативный range с datalist не умеет (по замечанию пользователя:
+     "ползунки должны двигаться прыжками, но плавно", "отметки... круговыми
+     расширениями"). */
+  .jump-slider{
+    position:relative;
+    flex:1;
+    min-width:0;
+    height:24px;
+    display:flex;
+    align-items:center;
+    cursor:pointer;
+    touch-action:none;
+    outline:none;
+  }
+  .jump-slider:focus-visible .jump-slider-thumb{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+  }
+  .jump-slider-track{
+    position:relative;
+    width:100%;
+    height:6px;
+    background:var(--rule);
+    border-radius:3px;
+  }
+  .jump-slider-fill{
+    position:absolute;
+    top:0;
+    left:0;
+    height:100%;
+    background:var(--accent);
+    border-radius:3px;
+    transition:width .18s ease;
+  }
+  .jump-slider-mark{
+    position:absolute;
+    top:50%;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--panel);
+    border:2px solid var(--rule);
+    transform:translate(-50%,-50%);
+    transition:background-color .18s ease, border-color .18s ease;
+  }
+  .jump-slider-mark.passed{
+    background:var(--accent);
+    border-color:var(--accent);
+  }
+  .jump-slider-thumb{
+    position:absolute;
+    top:50%;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:var(--accent);
+    border:3px solid var(--panel);
+    transform:translate(-50%,-50%);
+    transition:left .18s ease;
+  }
+
+  table{
+    width:100%;
+    table-layout:fixed;
+    border-collapse:collapse;
+    margin-bottom:8px;
+  }
+  th:first-child, td:first-child{width:34%;}
+  th:not(:first-child), td:not(:first-child){width:16.5%;}
+  th,td{
+    text-align:left;
+    padding:9px 10px;
+    font-family:inherit;
+    font-size:14px;
+    font-variant-numeric:tabular-nums;
+    letter-spacing:0;
+    border-bottom:1px solid var(--rule);
+  }
+  th{
+    background:var(--table-header-bg);
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    font-size:11px;
+    letter-spacing:.05em;
+    font-weight:600;
+  }
+  th.num{text-align:right;}
+  td.num{text-align:right;}
+  /* Числовые ЗНАЧЕНИЯ (толщина/ширина/длина/кол-во) не переносим никогда - в
+     отличие от названия детали (первая колонка), где перенос длинного
+     названия на несколько строк - это нормально и ожидаемо, перенос ЧИСЛА
+     выглядит как будто оно сломалось (см. мобильный фикс ниже - именно узкие
+     числовые колонки на маленьких экранах были причиной). Заголовки
+     ("ТОЛЩИНА"/"ШИРИНА"/...) - НЕ nowrap: колонка узкая не только на
+     маленьком экране, но и когда рядом чертёж (.spec-row-diagram, чертёж
+     занимает фиксированные 300px+отступ, а таблица сжимается уже при
+     довольно широком окне) - без переноса длинный заголовок вылезал за
+     границу своей ячейки и наезжал на соседний ("ТОЛЩИНАШИРИНА" слитно) - по
+     репорту пользователя. overflow-wrap:break-word переносит слово на 2-ю
+     строку внутри своей колонки вместо наезда на соседнюю. */
+  td.num{white-space:nowrap;}
+  th.num{white-space:normal;overflow-wrap:break-word;}
+  tr.total td{font-weight:700;border-top:2px solid var(--ink);border-bottom:none;}
+
+  .spec-table{margin-bottom:26px;}
+  .spec-table:last-child{margin-bottom:0;}
+  /* Скруглённые углы таблицы деталей - для единообразия с карточками и
+     остальными блоками сайта (border-radius:12px, как у .card/.box-view) -
+     по замечанию пользователя. Радиус и обводка - на обёртке (.spec-table
+     div), а не на самой <table> (border-collapse:collapse ломает
+     border-radius на table/th/td напрямую) - overflow:hidden обрезает
+     прямые углы таблицы по скруглённой рамке обёртки. Только на экране -
+     печатная таблица (#printArea .spec-table) не имеет своей рамки/радиуса,
+     трогать её не нужно. */
+  @media screen{
+    .spec-table{
+      border:1px solid var(--rule);
+      border-radius:12px;
+      overflow:hidden;
+    }
+  }
+  .editable-cell{
+    cursor:text;
+    border-bottom:1px dashed var(--accent);
+    border-radius:4px;
+  }
+  .editable-cell:hover{background:var(--accent-wash);}
+  .editable-cell:focus{
+    outline:none;
+    background:var(--accent-wash);
+    border-bottom:1px solid var(--accent);
+  }
+
+  .part-title{
+    font-size:15px;
+    font-weight:700;
+    color:var(--ink);
+    margin:22px 0 8px;
+  }
+  .part-title:first-child{margin-top:0;}
+
+  .note{
+    font-size:13px;
+    color:var(--ink-soft);
+    background:var(--warn-wash);
+    border-left:3px solid var(--warn);
+    border-radius:0 10px 10px 0;
+    padding:14px 16px;
+    margin-top:20px;
+    font-family:inherit;
+    line-height:1.6;
+  }
+
+  .disclaimer{
+    font-size:12px;
+    color:var(--ink-soft);
+    opacity:.75;
+    font-family:inherit;
+    line-height:1.5;
+    text-align:center;
+  }
+
+  #results{display:none;}
+  .error{color:var(--error);font-family:inherit;font-size:13px;font-weight:600;margin-top:12px;}
+
+  .spec-row-diagram{
+    display:flex;
+    gap:34px;
+    align-items:center;
+  }
+  .spec-row-diagram .spec-table{flex:1;min-width:0;margin-bottom:0;}
+
+  .diagram-slot{
+    flex:0 0 300px;
+    width:300px;
+    position:relative;
+    overflow:visible;
+    margin-left:32px;
+    margin-top:24px;
+  }
+  .diagram-wrap{
+    position:relative;
+    flex:0 0 260px;
+    width:260px;
+    --dk:1; /* масштаб чертежа на экране, см. reserveDiagramOverflowScreen() */
+    --lk:1; /* доп. фиксированный множитель подписей, см. renderDiagram()/labelScale в src/common-diagrams.js */
+  }
+  .diagram-wrap img{
+    display:block;
+    width:100%;
+    height:auto;
+  }
+  .diagram-arrows{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    overflow:visible;
+    pointer-events:none;
+  }
+  .diagram-labels{
+    position:absolute;
+    inset:0;
+    z-index:10;
+    pointer-events:none;
+  }
+  .diagram-label{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    background:#fff;
+    border:calc(var(--dk)*var(--lk)*1px) solid var(--ink);
+    color:var(--ink);
+    font-family:inherit;
+    font-size:calc(var(--dk)*var(--lk)*13px);
+    font-weight:700;
+    padding:calc(var(--dk)*var(--lk)*2px) calc(var(--dk)*var(--lk)*7px);
+    border-radius:calc(var(--dk)*var(--lk)*6px);
+    white-space:nowrap;
+    line-height:1.3;
+  }
+  .diagram-label-vertical{
+    transform:translate(-50%,-50%) rotate(-90deg);
+  }
+
+  /* #boardTables - явный скоуп (а не голые .spec-row-diagram/.diagram-slot/
+     .diagram-wrap): те же имена классов используются и в печатной области
+     (#printArea .spec-row-diagram и т.п., см. common-print.js). printBox()
+     измеряет и подгоняет печатную раскладку ДО window.print() - то есть
+     пока страница ещё в обычном (не print) режиме, а не в момент самой
+     печати - поэтому даже "@media screen and" не спасает: пока идёт это
+     измерение, узкий ЭКРАННЫЙ viewport (например, окно браузера уже
+     700px - не телефон, а обычное несведённое во весь экран окно или
+     масштабирование интерфейса Windows) заставлял этот !important-блок
+     сработать и на печатной разметке тоже (у неё нет !important на
+     flex-direction, значит она проигрывала), из-за чего чертежи в печати
+     "уезжали" над таблицу и растягивались на всю ширину листа - по репорту
+     пользователя. #boardTables-скоуп физически не пересекается с
+     #printArea (это два разных поддерева DOM), поэтому теперь это в
+     принципе невозможно, независимо от текущей ширины окна браузера. */
+  @media screen and (max-width: 700px){
+    #boardTables .spec-row-diagram{
+      flex-direction:column;
+      gap:16px !important;
+    }
+    #boardTables .diagram-slot{
+      width:100% !important;
+      flex-basis:auto !important;
+    }
+    /* width НЕ !important (в отличие от .diagram-slot выше) - её должен
+       уметь перебить inline-стиль, который на каждый расчёт проставляет
+       reserveDiagramOverflowScreen() (см. src/common-print.js), сжимая
+       чертёж, если подписи/стрелки не помещаются в реальную (узкую на
+       телефоне) ширину слота. С !important инлайн-сжатие никогда не
+       применялось - чертёж всегда рендерился на всю ширину до 240px, и
+       подписи вылезали за пределы экрана целиком - по репорту пользователя.
+       100%/max-width:240px остаются как запасное значение до первого
+       расчёта (пока JS ещё не отработал) и на случай, если JS-стиль вдруг
+       не проставлен. */
+    #boardTables .diagram-wrap{
+      width:100%;
+      flex-basis:auto !important;
+      max-width:240px;
+      margin:0 auto;
+    }
+  }
+
+  /* Узкие экраны (телефоны). Фиксированные паддинги карточек и ячеек
+     таблицы, рассчитанные на десктопную ширину, не сжимаются вместе с
+     экраном: числовые колонки таблицы деталей (16.5% от и без того узкой
+     ширины карточки) с паддингом 9-10px не оставляют места даже для
+     4-значного числа при шрифте 14px - оно переносится на 2 строки.
+     Внутри карточки/таблицы места объективно мало, поэтому здесь
+     одновременно уменьшаем паддинг карточки и паддинг/шрифт ячеек -
+     white-space:nowrap (см. выше) сам по себе только скрыл бы часть
+     числа, не решив нехватку места.
+     (.summary складывается в один столбец раньше, на 700px - см. блок
+     выше вместе со стекингом .summary-row.) */
+  @media screen and (max-width: 480px){
+    .card{padding:20px;}
+    .summary div{padding:14px 16px;}
+    /* #boardTables - тот же повод, что и у соседнего блока (max-width:700px)
+       выше: голые th/td совпадали бы и с ячейками печатной таблицы
+       (#printArea .spec-table th/td) - здесь у обеих сторон нет !important,
+       так что специфичность (#printArea .spec-table td сильнее голого td)
+       и так защищала бы печать, но скоуп к #boardTables делает это верным
+       по построению, а не по случайному стечению specificity. */
+    #boardTables th, #boardTables td{padding:7px 6px;font-size:12.5px;}
+    /* letter-spacing - у узких числовых колонок (16.5% от и без того узкой
+       карточки) заголовки типа "ТОЛЩИНА"/"ШИРИНА" не умещаются в одну строку
+       даже при уменьшенном шрифте (10px); перенос на 2-ю строку внутри своей
+       колонки (overflow-wrap:break-word, th.num{white-space:normal} - см.
+       общее правило выше, действует на любой ширине) тут уже есть сам по
+       себе - letter-spacing:0 убирает межбуквенный интервал (нужен только на
+       просторных экранах), экономя ещё немного ширины. */
+    #boardTables th{font-size:10px;letter-spacing:0;line-height:1.25;}
+  }
+
+  /* ============ Экран слишком узкий - только фон и надпись ============ */
+  /* Ниже этой ширины интерфейс уже не удаётся показать читаемо, даже с
+     переносом заголовков таблицы (см. 480px выше) - вместо сломанного вида
+     показываем только фон и короткое сообщение, по просьбе пользователя.
+     #tooNarrow - разметка добавлена в конец <body> отдельно в каждом
+     shell.html (тип I-1/I-3/II-1), сосед .wrap, а не внутри него - скрыт по
+     умолчанию, виден только через этот медиа-запрос. В печати не появляется
+     в принципе - печатный <style media="print"> прячет все body>* кроме
+     #printArea независимо от ширины экрана. */
+  #tooNarrow{display:none;}
+  @media screen and (max-width:259px){
+    .wrap{display:none !important;}
+    #tooNarrow{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      padding:24px;
+      text-align:center;
+      color:var(--ink-soft);
+      font-family:'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size:14px;
+      line-height:1.5;
+    }
+  }
+
+  /* ============ Фильтр толщин пиломатериала "в наличии" ============ */
+  .thickness-filter{position:relative;}
+  .thickness-dropdown-btn{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    border:1px solid var(--border-input);
+    border-radius:8px;
+    background:#ffffff;
+    color:var(--ink);
+    font-family:inherit;
+    font-size:14px;
+    cursor:pointer;
+    text-align:left;
+  }
+  .thickness-dropdown-btn:hover{background:#ffffff;border-color:var(--accent);}
+  .thickness-dropdown-btn span:first-child{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .thickness-dropdown-arrow{flex:0 0 auto;color:var(--ink-soft);}
+  .thickness-dropdown-panel{
+    display:none;
+    position:absolute;
+    z-index:30;
+    top:calc(100% + 6px);
+    left:0;
+    right:0;
+    background:var(--panel);
+    border:1px solid var(--rule);
+    border-radius:12px;
+    box-shadow:var(--shadow-lg);
+    padding:16px;
+    max-height:340px;
+    overflow-y:auto;
+  }
+  .thickness-dropdown-panel.open{display:block;}
+  .thickness-dropdown-actions{
+    display:flex;
+    gap:10px;
+    margin-bottom:12px;
+    padding-bottom:12px;
+    border-bottom:1px solid var(--rule);
+  }
+  .thickness-dropdown-actions button{
+    margin:0;
+    padding:8px 14px;
+    font-size:12px;
+  }
+  .thickness-checkbox-list{
+    display:grid;
+    /* Список стандартных толщин короткий (до 16 значений - у типов I-3/II-1,
+       у I-1 их 14) - просто в 2 столбца, заполнение по столбцам сверху вниз.
+       8 строк даёт ровно 2 столбца при 16 значениях (иначе, при 7 строках,
+       16 значений уходили бы в 3-й столбец) - по замечанию пользователя. */
+    grid-auto-flow:column;
+    grid-template-rows:repeat(8,auto);
+    grid-auto-columns:1fr;
+    gap:5px 12px;
+  }
+  .thickness-checkbox-list label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-family:inherit;
+    font-size:13px;
+    text-transform:none;
+    letter-spacing:0;
+    color:var(--ink);
+    margin:0;
+    cursor:pointer;
+  }
+  .thickness-checkbox-list input{margin:0;accent-color:var(--accent);}
+  @media screen and (max-width:640px){
+    .thickness-checkbox-list{grid-template-rows:repeat(16,auto);}
+  }
+  .fastening-option-list{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .fastening-option-list label{
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    font-family:inherit;
+    font-size:14px;
+    color:var(--ink);
+    text-transform:none;
+    letter-spacing:0;
+    margin:0;
+    cursor:pointer;
+  }
+  .fastening-option-list input{margin-top:3px;flex:0 0 auto;accent-color:var(--accent);}
+  .fastening-option-disabled{opacity:.45;cursor:not-allowed !important;}
+  .fastening-option-disabled input{cursor:not-allowed !important;}
+  .fastening-option-list .option-hint{
+    display:block;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:3px;
+  }
+
+  /* ================= ПЕЧАТЬ =================
+     Печатный блок всегда отрисован (сдвинут за экран, но НЕ display:none) —
+     благодаря этому перед печатью можно измерить его настоящую высоту.
+
+     Бюджет листа А4 при полях 8 мм:
+        ширина  = (210 - 16) мм = 733 px
+        высота  = (297 - 16) мм = 1062 px
+     Ширина — жёсткий лимит, т.к. чертёж и таблица стоят в один ряд:
+        чертёж 388 + отступ 16 + зазор 20 + таблица 309 = 733
+     Размеры ниже подобраны под этот бюджет: самая длинная подпись
+     («Подполозная доска», «ТОЛЩИНА», «2450») помещается без обрезки.
+     Оставшуюся высоту распределяет JS (см. printBox) — за счёт этого лист
+     заполняется целиком, а не наполовину. */
+  #printArea{
+    /* Раньше прятали экстремальным сдвигом (left:-100000px) - на части
+       систем (другой DPI/масштаб экрана) такой огромный offset у
+       position:fixed элемента мог раздувать scrollWidth всего документа
+       и визуально "растягивать" видимую страницу вбок при вызове печати
+       (по репорту пользователя). opacity+pointer-events прячет элемент,
+       оставляя его на обычном месте (left:0;top:0) в пределах обычного
+       viewport - никакого экстремального смещения, которое могло бы
+       повлиять на layout документа.
+    */
+    position:fixed;
+    left:0;
+    top:0;
+    opacity:0;
+    pointer-events:none;
+    overflow:hidden;   /* иначе при масштабировании появляется полоса прокрутки */
+  }
+  /* Внутренний слой — его и масштабируем. Внешний #printArea всегда остаётся
+     шириной с печатное поле, поэтому браузер не видит переполнения и не
+     применяет собственное «сжать до листа» поверх нашего (из-за этого
+     страница уменьшалась дважды и треть листа пустовала). */
+  #printScale{ transform-origin:top left; position:relative; --pk:1; }
+  #printArea, #printArea *{ box-sizing:border-box; }
+
+  /* Водяной знак — в правом нижнем углу. Общий вид ящика - отдельная
+     строка перед "Дно" (та же вёрстка .spec-row-diagram/.diagram-slot/
+     .diagram-wrap, что и у остальных чертежей - размер подхватывается
+     автоматически через applyDiagramWidths()), а не в шапке. Обе итоговые
+     таблицы - "Внутренние размеры груза" и "Итог" - справа от него, друг
+     под другом. flex:1, как у .spec-table в остальных строках, - колонка
+     растягивается на всю ширину, оставшуюся после чертежа, а не жмётся
+     по ширине своего текста. */
+  #printArea .print-summary-col{
+    display:flex;
+    flex-direction:column;
+    gap:calc(var(--pk)*14px);
+    flex:1;
+    min-width:0;
+  }
+  #printArea .print-watermark{
+    position:absolute;right:4px;bottom:0;
+    width:176px;height:auto;
+    opacity:.11;
+  }
+  #printArea{
+    background:#fff;
+    font-family:'Courier New', monospace;
+    color:#091135;
+    font-size:16px;
+    font-weight:700;
+    line-height:1.4;
+  }
+  #printArea h1{font-size:calc(var(--pk)*24px);margin:0 0 6px;font-family:Georgia, serif;color:#8A4B26;font-weight:700;}
+  #printArea .print-subtitle{color:#36394A;margin-bottom:calc(var(--pk)*6px);font-size:calc(var(--pk)*16px);font-weight:700;}
+
+  /* Внутренние размеры груза + Итог — в колонке справа от чертежа ящика (см. .print-summary-col) */
+  #printArea .print-summary-block{flex:0 0 auto;}
+  #printArea .print-summary-block h2{font-size:calc(var(--pk)*12px);text-transform:uppercase;letter-spacing:.05em;color:#8A4B26;margin:0 0 6px;font-weight:700;}
+  #printArea .print-plain-table{border-collapse:collapse;width:100%;}
+  #printArea .print-plain-table td{padding:calc(var(--pk)*2px) 0;text-align:left;font-size:calc(var(--pk)*13px);font-weight:700;white-space:nowrap;}
+  #printArea .print-plain-table td.k{color:#36394A;}
+  #printArea .print-plain-table td:not(.k){width:100%;text-align:right;}
+
+  /* Таблицы конфигурации досок.
+     Ширины колонок подобраны под бюджет: «Подполозная» и «2450» влезают
+     без переноса при шрифте 20px. */
+  #printArea .spec-table table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;}
+  #printArea .spec-table th:first-child, #printArea .spec-table td:first-child{width:48%;}
+  #printArea .spec-table th:not(:first-child), #printArea .spec-table td:not(:first-child){width:13%;}
+  #printArea .spec-table th, #printArea .spec-table td{
+    text-align:left;padding:calc(var(--pk)*6px) calc(var(--pk)*4px);font-size:calc(var(--pk)*19px);font-weight:700;border-bottom:1px solid #E1E9F0;white-space:nowrap;overflow:hidden;
+  }
+  #printArea .spec-table th{color:#36394A;text-transform:uppercase;font-size:calc(var(--pk)*10px);letter-spacing:0;font-weight:700;}
+  #printArea .spec-table td.num, #printArea .spec-table th.num{text-align:right;}
+
+  #printArea .part-title{font-size:calc(var(--pk)*20px);font-weight:700;color:#8A4B26;margin:0 0 calc(var(--pk)*6px);}
+
+  /* Секция = заголовок узла + (чертёж | таблица). Обычный блочный контейнер:
+     на нём браузер надёжно соблюдает «не разрывать между листами». */
+  #printArea .print-section{break-inside:avoid-page;page-break-inside:avoid;}
+  #printArea .print-comment{
+    font-size:calc(var(--pk)*15px);
+    font-weight:700;
+    line-height:1.5;
+    white-space:pre-wrap;
+    word-break:break-word;
+    border:1px solid #E1E9F0;
+    border-radius:2px;
+    padding:calc(var(--pk)*10px) calc(var(--pk)*12px);
+  }
+  #printArea .spec-row-diagram{display:flex;gap:calc(var(--pk)*16px);align-items:center;page-break-inside:avoid;margin:0;}
+  #printArea .spec-row-diagram .spec-table{flex:1;min-width:0;margin:0;}
+  /* 310px / отступ 26px — измеренный максимальный вылет подписей вправо и влево
+     для старых (маленьких) чертежей. У Дна (2008×1212, длинная подпись у левого
+     края) вылет больше — отступ увеличен до 44px; вертикальные вылеты, а также
+     правый вылет подписей (пропорциональным сжатием чертежа через --dk, а не
+     обрезкой) резервируются из JS (reserveDiagramOverflow). */
+  #printArea .diagram-slot{flex:0 0 calc(var(--pk)*300px);width:calc(var(--pk)*300px);margin-left:calc(var(--pk)*44px);position:relative;overflow:visible;}
+  /* ширина самих чертежей проставляется из JS (у них разный масштаб) */
+  #printArea .diagram-wrap{position:relative;}
+  #printArea .diagram-wrap img{display:block;width:100%;height:auto;}
+  #printArea .diagram-arrows{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;}
+  /* Стрелки на чертежах — при печати заметно толще, чем на экране. --dk (по
+     умолчанию 1, задаётся из .diagram-wrap{--dk:1} в общем блоке выше) -
+     дополнительный ПОДИАГРАММНЫЙ масштаб (в отличие от --pk, единого на всю
+     страницу): его выставляет reserveDiagramOverflow() в src/common-print.js,
+     когда конкретному чертежу требуется сжатие, чтобы вылетающие за картинку
+     подписи (см. reserveDiagramOverflow) не налезали на соседнюю таблицу. */
+  /* Базовый множитель поднят 3px -> 12px (в 4 раза) - линии стрелок были
+     почти не видны при обычной печати (не через «Скачать PDF», у которой
+     уже был свой отдельный PDF_ARROW_STROKE_FACTOR=4 - см. common-print.js,
+     bakeDiagramArrowStrokeWidths - тот же итоговый множитель, 3*4=12,
+     теперь совпадает с этим правилом) - по репорту пользователя. */
+  #printArea .diagram-arrows line{stroke-width:calc(var(--pk)*var(--dk)*12px) !important;}
+  #printArea .diagram-labels{position:absolute;inset:0;pointer-events:none;}
+  #printArea .diagram-label{
+    position:absolute;transform:translate(-50%,-50%);background:#fff;
+    border:calc(var(--pk)*var(--dk)*var(--lk,1)*2px) solid #8A4B26;color:#091135;font-size:calc(var(--pk)*var(--dk)*var(--lk,1)*15px);font-weight:700;
+    padding:calc(var(--pk)*var(--dk)*var(--lk,1)*2px) calc(var(--pk)*var(--dk)*var(--lk,1)*6px);white-space:nowrap;line-height:1.3;
+  }
+  #printArea .diagram-label-vertical{
+    transform:translate(-50%,-50%) rotate(-90deg);
+  }
+
+</style>
+<style>
+  /* Стили стартовой страницы (уровень 1 - список ГОСТов) - поверх общего
+     style.css, специфика только здесь. */
+  .wrap{max-width:760px;}
+  .gost-list{display:flex;flex-direction:column;gap:10px;}
+  .gost-link{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:18px 20px;
+    border:1px solid var(--border-input);
+    border-radius:10px;
+    background:#ffffff;
+    color:var(--ink);
+    text-decoration:none;
+    transition:border-color .15s ease, background-color .15s ease;
+  }
+  .gost-link:hover{
+    border-color:var(--accent);
+    background:var(--accent-wash);
+  }
+  .gost-link .gost-name{font-size:16px;font-weight:600;}
+  .gost-link .arrow{color:var(--accent);font-size:18px;line-height:1;flex:none;}
+  .empty-note{color:var(--ink-soft);font-size:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Калькуляторы производства тары</h1>
+    <div class="subtitle">Выберите ГОСТ</div>
+  </header>
+
+  <div id="gosts"></div>
+</div>
+
+<script>
+// Каталог ГОСТов для стартовой страницы (уровень 1).
+//
+// Чтобы добавить новый ГОСТ - добавьте запись сюда (file - страница со списком
+// типов этого ГОСТа, см. src/launcher/types-*.js и build.py: TYPES_PAGES) и
+// пересоберите (python3 build.py).
+const GOSTS = [
+  {
+    gost: 'ГОСТ 10198-91',
+    title: 'Ящики дощатые неразборные для грузов массой до 3000 кг',
+    file: 'gost-10198-91.html'
+  }
+  // Следующий ГОСТ добавляется сюда новым объектом { gost, title, file }.
+];
+
+
+(function(){
+  const root = document.getElementById('gosts');
+  if(!GOSTS.length){
+    root.innerHTML = '<div class="card"><span class="empty-note">ГОСТы ещё не добавлены.</span></div>';
+    return;
+  }
+  let html = '<div class="gost-list">';
+  GOSTS.forEach(g => {
+    html += `<a class="gost-link" href="${g.file}">
+      <div class="gost-name">${g.gost}</div>
+      <span class="arrow">→</span>
+    </a>`;
+  });
+  html += '</div>';
+  root.innerHTML = html;
+})();
+</script>
+</body>
+</html>
