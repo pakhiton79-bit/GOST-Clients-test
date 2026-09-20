@@ -1,0 +1,223 @@
+#!/usr/bin/env python3
+"""Собирает src/*.{html,css,js} + src/images/* в готовые файлы docs/*.html.
+
+Два независимых калькулятора (разная методика ГОСТ 10198-91), у каждого
+свой набор исходников, но общий src/style.css (единый визуальный стиль),
+общий src/common-print.js (механика печати - подгонка под 1 лист А4,
+резерв места под вылет подписей чертежей - в обоих типах одинаковая,
+кроме содержимого buildPrintHtml(), которое остаётся в каждом типе своё)
+и общий src/common-diagrams.js (рендер чертежей-фото renderDiagram() и
+общие для обоих типов чертёж торца без раскосины/с 1 раскосиной - у
+типа I-1 раскосин на торце не бывает больше одной), а также общий
+src/common-timesettings.js (шестерёнка настроек нормы времени у плитки
+"Норма времени" - базовая производительность и коэффициент времени,
+сохраняются в localStorage отдельно для каждого типа ящика):
+
+== Тип I-3 (крепление за полозья / к доскам дна) ==
+src/calc.src.html - HTML-каркас с плейсхолдерами:
+  /*__STYLE_CSS__*/             -> src/style.css
+  /*__LOGIC_JS__*/              -> src/logic.js (расчётные формулы ГОСТ)
+  /*__COMMON_DIAGRAMS_JS__*/    -> src/common-diagrams.js (общий рендер чертежей)
+  /*__DIAGRAMS_JS__*/           -> src/diagrams.js (чертежи деталей)
+  /*__COMMON_PRINT_JS__*/       -> src/common-print.js (общая механика печати)
+  /*__COMMON_TIMESETTINGS_JS__*/ -> src/common-timesettings.js (шестерёнка нормы времени)
+  /*__APP_JS__*/                -> src/app.js (UI, calculate(), buildPrintHtml())
+Способ крепления груза (за полозья / к доскам дна) - runtime-переключатель
+внутри одного файла (параметр fasteningType в computeGost10198I3(), см.
+src/app.js), тем же приёмом, что и в типе II-1 - НЕ отдельные build-варианты
+(раньше было 2 отдельных собранных файла с разной толщиной доски дна,
+см. src/variants/ и git-историю).
+  - GOST10198_91POLOZIA.html
+
+== Тип I-1 ==
+src/i1/shell.html - свой HTML-каркас с плейсхолдерами STYLE_CSS/LOGIC_JS/
+DIAGRAMS_JS/COMMON_PRINT_JS (первые два - src/i1/logic.js, src/i1/diagrams.js,
+пока заглушки - фото чертежей ещё не пришли; CSS и печать - общие с типом
+I-3, файлы те же) плюс UI_JS/CALC_JS (src/i1/ui.js - фильтр толщин и галочка
+полоза, src/i1/calc.js - calculate() и buildPrintHtml()).
+  - GOST10198_91_I1.html
+
+== Стартовые страницы (2 уровня) ==
+Уровень 1 - список ГОСТов (src/launcher/launcher.src.html + src/launcher/
+gosts.js) -> уровень 2 - список типов тары внутри выбранного ГОСТа
+(src/launcher/types.src.html + свой src/launcher/types-<гост>.js на каждый
+ГОСТ, с чертежом общего вида ящика у каждого типа справа) -> сам калькулятор.
+Способ крепления груза внутри типа I-3 (за полозья / к доскам дна) - НЕ
+отдельный пункт на странице типов, а выпадающий список уже внутри калькулятора
+(см. onFasteningTypeChange в src/app.js), пересчитывается на лету без
+перезагрузки страницы. Стиль - общий src/style.css (design.md) на всех страницах.
+Чтобы добавить новый ГОСТ - дописать запись в gosts.js и завести его типы в
+новом types-<гост>.js + TYPES_VARIANTS ниже, разметку менять не надо.
+  - index.html, gost-10198-91.html (лежат в docs/ рядом с калькуляторами -
+    ссылки по имени файла, без пути)
+
+Плейсхолдеры вида __IMG:filename.ext__ (внутри diagrams.js/app.js) заменяются
+на base64-содержимое соответствующего файла из src/images/. Запуск:
+
+    python3 build.py
+"""
+import base64
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+SRC_DIR = ROOT / "src"
+IMAGES_DIR = SRC_DIR / "images"
+OUT_DIR = ROOT / "docs"  # "docs" (не "dist") - так папку можно напрямую указать источником в GitHub Pages
+
+IMG_PLACEHOLDER = re.compile(r"__IMG:([A-Za-z0-9_.-]+)__")
+
+COMMON_PRINT_JS = SRC_DIR / "common-print.js"
+COMMON_DIAGRAMS_JS = SRC_DIR / "common-diagrams.js"
+COMMON_TIMESETTINGS_JS = SRC_DIR / "common-timesettings.js"
+# Сторонние библиотеки для «Скачать PDF» (downloadPdf() в common-print.js) -
+# html2canvas рендерит #printArea в канвас, jsPDF упаковывает его в
+# настоящий PDF-файл и сохраняет через doc.save() (реальная отдача файла
+# браузером, без диалога печати) - по просьбе пользователя вместо printBox()/
+# window.print() для этой кнопки. Вендорятся как обычные файлы (не CDN) -
+# тем же принципом, что и остальной проект (самодостаточные страницы без
+# внешних зависимостей на этапе показа пользователю).
+VENDOR_JSPDF_JS = SRC_DIR / "vendor" / "jspdf.umd.min.js"
+VENDOR_HTML2CANVAS_JS = SRC_DIR / "vendor" / "html2canvas.min.js"
+
+I3_SHELL = SRC_DIR / "calc.src.html"
+I3_PARTS = {
+    "/*__STYLE_CSS__*/": SRC_DIR / "style.css",
+    "/*__LOGIC_JS__*/": SRC_DIR / "logic.js",
+    "/*__COMMON_DIAGRAMS_JS__*/": COMMON_DIAGRAMS_JS,
+    "/*__DIAGRAMS_JS__*/": SRC_DIR / "diagrams.js",
+    "/*__VENDOR_HTML2CANVAS_JS__*/": VENDOR_HTML2CANVAS_JS,
+    "/*__VENDOR_JSPDF_JS__*/": VENDOR_JSPDF_JS,
+    "/*__COMMON_PRINT_JS__*/": COMMON_PRINT_JS,
+    "/*__COMMON_TIMESETTINGS_JS__*/": COMMON_TIMESETTINGS_JS,
+    "/*__APP_JS__*/": SRC_DIR / "app.js",
+}
+I3_VARIANTS = [
+    {"out_name": "GOST10198_91POLOZIA.html"},
+]
+
+I1_DIR = SRC_DIR / "i1"
+I1_SHELL = I1_DIR / "shell.html"
+I1_PARTS = {
+    "/*__STYLE_CSS__*/": SRC_DIR / "style.css",
+    "/*__LOGIC_JS__*/": I1_DIR / "logic.js",
+    "/*__COMMON_DIAGRAMS_JS__*/": COMMON_DIAGRAMS_JS,
+    "/*__DIAGRAMS_JS__*/": I1_DIR / "diagrams.js",
+    "/*__VENDOR_HTML2CANVAS_JS__*/": VENDOR_HTML2CANVAS_JS,
+    "/*__VENDOR_JSPDF_JS__*/": VENDOR_JSPDF_JS,
+    "/*__COMMON_PRINT_JS__*/": COMMON_PRINT_JS,
+    "/*__COMMON_TIMESETTINGS_JS__*/": COMMON_TIMESETTINGS_JS,
+    "/*__UI_JS__*/": I1_DIR / "ui.js",
+    "/*__CALC_JS__*/": I1_DIR / "calc.js",
+}
+I1_VARIANTS = [
+    {"out_name": "GOST10198_91_I1.html"},
+]
+
+II1_DIR = SRC_DIR / "ii1"
+II1_SHELL = II1_DIR / "shell.html"
+II1_PARTS = {
+    "/*__STYLE_CSS__*/": SRC_DIR / "style.css",
+    "/*__LOGIC_JS__*/": II1_DIR / "logic.js",
+    "/*__COMMON_DIAGRAMS_JS__*/": COMMON_DIAGRAMS_JS,
+    "/*__DIAGRAMS_JS__*/": II1_DIR / "diagrams.js",
+    "/*__VENDOR_HTML2CANVAS_JS__*/": VENDOR_HTML2CANVAS_JS,
+    "/*__VENDOR_JSPDF_JS__*/": VENDOR_JSPDF_JS,
+    "/*__COMMON_PRINT_JS__*/": COMMON_PRINT_JS,
+    "/*__COMMON_TIMESETTINGS_JS__*/": COMMON_TIMESETTINGS_JS,
+    "/*__UI_JS__*/": II1_DIR / "ui.js",
+    "/*__CALC_JS__*/": II1_DIR / "calc.js",
+}
+II1_VARIANTS = [
+    {"out_name": "GOST10198_91_II1.html"},
+]
+
+LAUNCHER_DIR = SRC_DIR / "launcher"
+
+# Уровень 1 - стартовая страница (список ГОСТов).
+LAUNCHER_SHELL = LAUNCHER_DIR / "launcher.src.html"
+LAUNCHER_PARTS = {
+    "/*__STYLE_CSS__*/": SRC_DIR / "style.css",
+    "/*__GOSTS_JS__*/": LAUNCHER_DIR / "gosts.js",
+}
+LAUNCHER_VARIANTS = [
+    {"out_name": "index.html"},
+]
+
+# Уровень 2 - страница типов тары внутри одного ГОСТа. Каждая запись - один
+# ГОСТ: out_name/GOST_NAME/GOST_TITLE - как в src/launcher/gosts.js (file
+# соответствующей записи), TYPES_JS - его файл каталога типов
+# (src/launcher/types-*.js). Новый ГОСТ добавляется и сюда, и в gosts.js.
+TYPES_SHELL = LAUNCHER_DIR / "types.src.html"
+TYPES_PARTS = {
+    "/*__STYLE_CSS__*/": SRC_DIR / "style.css",
+}
+TYPES_VARIANTS = [
+    {
+        "out_name": "gost-10198-91.html",
+        "/*__GOST_NAME__*/": "ГОСТ 10198-91",
+        "/*__TYPES_JS__*/": LAUNCHER_DIR / "types-10198-91.js",
+    },
+]
+
+
+def build_one(shell, parts, variant):
+    text = shell.read_text(encoding="utf-8")
+
+    for placeholder, path in parts.items():
+        if placeholder not in text:
+            print(f"Плейсхолдер {placeholder} не найден в {shell}", file=sys.stderr)
+            sys.exit(1)
+        text = text.replace(placeholder, path.read_text(encoding="utf-8"))
+
+    for key, path in variant.items():
+        if key == "out_name":
+            continue
+        if key not in text:
+            print(f"Плейсхолдер {key} не найден", file=sys.stderr)
+            sys.exit(1)
+        # Значение варианта - либо путь к файлу (обычный случай), либо просто
+        # готовая строка (для плейсхолдеров вида /*__GOST_NAME__*/ на странице
+        # типов, где нет смысла заводить отдельный файл на одну строку текста).
+        content = path.read_text(encoding="utf-8") if isinstance(path, Path) else path
+        text = text.replace(key, content)
+
+    missing = []
+
+    def replace_img(match):
+        fname = match.group(1)
+        path = IMAGES_DIR / fname
+        if not path.exists():
+            missing.append(fname)
+            return match.group(0)
+        data = base64.b64encode(path.read_bytes()).decode("ascii")
+        return data
+
+    result = IMG_PLACEHOLDER.sub(replace_img, text)
+
+    if missing:
+        print("Не найдены файлы картинок:", ", ".join(missing), file=sys.stderr)
+        sys.exit(1)
+
+    out_path = OUT_DIR / variant["out_name"]
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(result, encoding="utf-8")
+    print(f"Собрано: {out_path} ({out_path.stat().st_size / 1024:.0f} KB)")
+
+
+def main():
+    for variant in I3_VARIANTS:
+        build_one(I3_SHELL, I3_PARTS, variant)
+    for variant in I1_VARIANTS:
+        build_one(I1_SHELL, I1_PARTS, variant)
+    for variant in II1_VARIANTS:
+        build_one(II1_SHELL, II1_PARTS, variant)
+    for variant in LAUNCHER_VARIANTS:
+        build_one(LAUNCHER_SHELL, LAUNCHER_PARTS, variant)
+    for variant in TYPES_VARIANTS:
+        build_one(TYPES_SHELL, TYPES_PARTS, variant)
+
+
+if __name__ == "__main__":
+    main()
