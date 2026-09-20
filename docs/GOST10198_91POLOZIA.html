@@ -3753,11 +3753,11 @@ function initTimeSettings(storageKey){
 // (ГОСТ 10198-91, тип 1, комплектация 3) и переживает перезагрузку страницы.
 // Если ничего не выбрано - округление до складских номиналов не применяется,
 // расчёт идёт строго по значениям, которые даёт сам ГОСТ 10198-91.
-const THICKNESS_STORAGE_KEY = 'silvan-gost10198-t1-k3-available-thickness';
+const THICKNESS_STORAGE_KEY = 'gost10198-t1-k3-available-thickness';
 // Настройки шестерёнки у плитки "Норма времени" (базовая производительность
 // и коэффициент времени, см. src/common-timesettings.js) - свой ключ
 // localStorage для этого типа ящика, как и у THICKNESS_STORAGE_KEY выше.
-const TIME_SETTINGS_STORAGE_KEY = 'silvan-gost10198-t1-k3-time-settings';
+const TIME_SETTINGS_STORAGE_KEY = 'gost10198-t1-k3-time-settings';
 // Стандартный ряд толщин пиломатериала (сортаментный ряд) - округление "в наличии"
 // возможно только до одного из этих значений, не до произвольного мм. 225 и 250 -
 // добавлены по замечанию пользователя: Табл. 19 (подбор сечения полоза, см.
@@ -3882,7 +3882,7 @@ updateThicknessSummary();
 // в src/ii1/ui.js/calc.js): простой переключатель на одной странице, доска
 // дна пересчитывается на лету через параметр fasteningType в
 // computeGost10198I3() ниже, без перезагрузки/URL-трюка.
-const FASTENING_STORAGE_KEY = 'silvan-gost10198-t1-k3-fastening-type';
+const FASTENING_STORAGE_KEY = 'gost10198-t1-k3-fastening-type';
 const FASTENING_LABELS = {
   skid:           'Крепление за полозья',
   floor_boards:   'Крепление к доскам дна',
@@ -3941,7 +3941,7 @@ function onSkidForkliftExclusive(el){
 // уже давно работает для толщин "в наличии" и способа крепления -
 // переключение "за полозья"/"к доскам дна" не должно сбрасывать остальные
 // опции.
-const OPTIONS_STORAGE_PREFIX = 'silvan-gost10198-t1-k3-opt-';
+const OPTIONS_STORAGE_PREFIX = 'gost10198-t1-k3-opt-';
 function persistCheckbox(id){
   const el = document.getElementById(id);
   if(!el) return;
@@ -4135,7 +4135,12 @@ function computeGost10198I3(input){
   // пункт ГОСТа). При включённой «Погрузка авто/электропогрузчиком» и невыполнении
   // требования по длине (300мм) - дополнительно текстовое предупреждение и вместо
   // размеров в таблице выводится ⚠ (по указанию пользователя - оба предупреждения
-  // сосуществуют, не заменяют друг друга).
+  // сосуществуют, не заменяют друг друга). Отдельно: k10<=0 (длина/ширина груза
+  // выбраны так, что вычесть 400мм уже не из чего - типичный признак того, что
+  // длина и ширина перепутаны местами) - это не блокирующая ошибка (findNegativeField
+  // не ловит ровно 0, только отрицательные), но показывать в таблице "0 мм" как
+  // будто это настоящий размер детали нельзя - вместо чисел тоже выводится ⚠,
+  // не дожидаясь галочки "Погрузка погрузчиком" (по указанию пользователя).
   const t10Raw = forkliftLoading ? Math.max(subfloorThicknessRaw(MASS), 50) : subfloorThicknessRaw(MASS);
   const t10=ov('t10Value', roundUpToAvailable(t10Raw), 'Толщина подполозной доски'), w10=Math.min(w9, 150), k10=k9Base-400, l10=l9;
   if(k10 < 300){
@@ -4145,14 +4150,16 @@ function computeGost10198I3(input){
   if(subfloorForkliftFail){
     warnings.push(`Погрузка погрузчиком требует ≥300 мм у подполозной доски (сейчас ${Math.round(k10)} мм).`);
   }
+  const subfloorInvalidLength = k10 <= 0;
+  const subfloorShowWarnSymbol = subfloorInvalidLength || subfloorForkliftFail;
   if(!removeSkidBoards){
     dno.push({
       name:'Подполозная доска',
-      t: subfloorForkliftFail ? '⚠' : t10,
-      w: subfloorForkliftFail ? '⚠' : w10,
-      l: subfloorForkliftFail ? '⚠' : k10,
-      qty: subfloorForkliftFail ? '⚠' : l10,
-      overrideKey: subfloorForkliftFail ? undefined : 't10Value'
+      t: subfloorShowWarnSymbol ? '⚠' : t10,
+      w: subfloorShowWarnSymbol ? '⚠' : w10,
+      l: subfloorShowWarnSymbol ? '⚠' : k10,
+      qty: subfloorShowWarnSymbol ? '⚠' : l10,
+      overrideKey: subfloorShowWarnSymbol ? undefined : 't10Value'
     });
   }
 
