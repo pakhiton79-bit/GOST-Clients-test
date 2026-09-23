@@ -154,7 +154,6 @@ persistCheckbox('skidEnabled', ()=>{
   document.getElementById('skidThicknessRow').style.display = document.getElementById('skidEnabled').checked ? '' : 'none';
 });
 persistCheckbox('roundBoardWidths');
-persistCheckbox('removeLidBottomRaskosina');
 
 // skidThicknessValue (а не DOM) - источник истины при расчёте (см. calc.js),
 // поэтому восстанавливаем именно его, а не только checked-состояние радио.
