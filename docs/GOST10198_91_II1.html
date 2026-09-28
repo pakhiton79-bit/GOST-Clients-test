@@ -36,6 +36,7 @@
     --accent: #8A4B26;
     --accent-hover: #6E3B1C;
     --accent-wash: #F1E4D8;
+    --manual-ink: #5A2A10; /* тёмно-коричневый - значения, введённые вручную (см. #boardTables td[data-user-edited]) */
     --ok: #2E7D32;
     --warn: #B7791F;
     --warn-wash: #FBF3E4;
@@ -55,7 +56,11 @@
     line-height:1.35;
     overflow-x:hidden;
   }
-  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 80px;}
+  /* 1080px (было 960px) - по указанию пользователя: при 960px заголовки
+     колонок таблиц деталей («ТОЛЩИНА» и т.п.) переносились на 2 строки;
+     1080px - наименьшая ширина, при которой они в одну строку во всех трёх
+     типах (замер). */
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px;}
 
   /* Навигация «Назад» / «Главная» - вверху страниц выбора ГОСТа/типа и самих
      калькуляторов (везде, кроме самой стартовой страницы - там некуда). */
@@ -343,6 +348,11 @@
   }
   .summary .value span{font-size:13px;font-weight:400;color:var(--ink-soft);}
 
+  /* У типа I-1 в "Итоге" 4 плитки вместо 3 (добавлена "Масса ящика") - при
+     3 узких колонках длинные подписи ("Расход пиломатериала") переносились
+     по 3 строки нечитаемо. 2×2 даёт плиткам вдвое больше ширины. */
+  .summary.summary-4{grid-template-columns:repeat(2,minmax(0,1fr));}
+
   /* .summary-row переходит в столбец начиная с этой же ширины (см. блок
      выше) - плитки "Наружные размеры"/"Расход"/"Норма времени" получают
      втрое меньше места, чем рассчитано на 3-колоночный грид. Складываем
@@ -587,6 +597,12 @@
     border-radius:4px;
   }
   .editable-cell:hover{background:var(--accent-wash);}
+  /* Значения, введённые вручную в таблице деталей (data-user-edited, см.
+     обработчик input у #boardTables и editedAttr в common-print.js) -
+     тёмно-коричневым текстом, по указанию пользователя; только на сайте:
+     скоуп #boardTables не пересекается с печатной областью (#printArea). */
+  /* + светло-коричневая заливка всей ячейки (по указанию пользователя). */
+  #boardTables td[data-user-edited="true"]{color:var(--manual-ink);background:var(--accent-wash);}
   .editable-cell:focus{
     outline:none;
     background:var(--accent-wash);
@@ -600,6 +616,57 @@
     margin:22px 0 8px;
   }
   .part-title:first-child{margin-top:0;}
+  /* Лента обшивки торцов (I-1) - табличка 1×1 на всю ширину под всеми
+     элементами, см. calculate() в src/i1/calc.js. */
+  .spec-table.tape-table{margin-top:22px;}
+
+  /* ===== Шапка калькулятора: заголовок + поле «Номер или название ящика»
+     (справа от заголовка, по указанию пользователя; в печать/PDF - справа
+     от заголовка, см. boxNameHtml в common-print.js). ===== */
+  header.title-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  header.title-row h1{margin:0;}
+  /* до правого края - как карточки ниже (по указанию пользователя, для
+     единообразия; раньше было не шире 360px) */
+  .box-name-input{
+    flex:1 1 260px;
+    height:40px;
+    padding:0 12px;
+    font-family:inherit;
+    font-size:15px;
+    color:var(--ink);
+    background:var(--panel);
+    border:1px solid var(--border-input);
+    border-radius:10px;
+  }
+  .box-name-input:focus{outline:none;border-color:var(--accent);}
+
+  /* ===== Индикатор «Идёт расчёт…» (статус calcLoading) и кнопка сброса ===== */
+  .calc-loading{color:var(--accent);gap:8px;}
+  .calc-loading .spinner{
+    width:16px;height:16px;flex:0 0 16px;
+    border:2px solid var(--accent-wash);
+    border-top-color:var(--accent);
+    border-radius:50%;
+    animation:calc-spin .8s linear infinite;
+  }
+  @keyframes calc-spin{to{transform:rotate(360deg);}}
+  #calcBtn:disabled{opacity:.6;cursor:progress;}
+  /* Кнопка сброса - компактная, как кнопки печати, чтобы ряд действий
+     помещался в одну строку. */
+  .reset-btn{margin-left:12px;margin-top:0;padding:12px 18px;font-size:13px;}
+  /* «Печать» и «Скачать PDF» - одной неразрывной группой: если ряду не
+     хватает места, они переносятся вместе, а не по одной. */
+  .print-actions{display:inline-flex;gap:12px;white-space:nowrap;}
+  /* Ряд действий - гибкий: одинаковые промежутки, при нехватке места
+     группа печати переносится целиком и встаёт ровно под «Рассчитать»
+     (без сдвига от собственных отступов кнопок); текст ошибки (#err) -
+     отдельной строкой на всю ширину. */
+  .action-card{display:flex;flex-wrap:wrap;align-items:center;gap:12px;}
+  .action-card > button, .action-card .print-btn, .action-card .reset-btn{margin:0;}
+  .action-card .calc-status{margin-left:2px;margin-right:2px;}
+  .action-card > .error{flex-basis:100%;margin-top:0;}
+  .action-card > .error:empty{display:none;}
+  .reset-btn[hidden]{display:none;}
 
   .note{
     font-size:13px;
@@ -624,6 +691,7 @@
 
   #results{display:none;}
   .error{color:var(--error);font-family:inherit;font-size:13px;font-weight:600;margin-top:12px;}
+  .error.hint{color:var(--warn);} /* подсказка «Дождитесь окончания расчёта» - не ошибка: жёлтый, как «Нажмите «Рассчитать»» */
 
   .spec-row-diagram{
     display:flex;
@@ -639,6 +707,26 @@
     overflow:visible;
     margin-left:32px;
     margin-top:24px;
+  }
+  /* Тип I-1: все чертежи в едином масштабе (одинаковая высота рамки щита -
+     см. I1_FRAME_PX в src/i1/diagrams.js), поэтому самый длинный из них (4
+     планки) шире обычных 260px - слот расширен на 40px, из них 20px взяты у
+     левого отступа слота, так что таблица деталей сужается всего на 20px.
+     Скоуп #boardTables - печать не затрагивается (там свой слот, см.
+     #printArea .diagram-slot; каждый чертёж I-1 - своего размера, без
+     общего масштаба). */
+  #boardTables .diagram-slot[data-i1-panel]{
+    flex-basis:340px;
+    width:340px;
+    margin-left:12px;
+  }
+  /* I-3/II-1 - тот же расширенный слот, что и у I-1 (по указанию
+     пользователя: чертежи занимают всё своё место, см. growDiagramToSlot
+     в common-print.js). */
+  #boardTables .diagram-slot{
+    flex-basis:340px;
+    width:340px;
+    margin-left:12px;
   }
   .diagram-wrap{
     position:relative;
@@ -723,6 +811,15 @@
       flex-basis:auto !important;
       max-width:240px;
       margin:0 auto;
+    }
+    /* I-1: каждый чертёж максимального размера (см. data-i1-panel выше) - длинный
+       шире 240px; max-width обрезал бы только картинку, а подписи (их
+       размер - через --dk) оставались бы прежними и наезжали друг на
+       друга. Сжатие по ширине экрана делает reserveDiagramOverflowScreen
+       (вместе с подписями), каждый чертёж - независимо. */
+    #boardTables .diagram-slot[data-i1-panel] .diagram-wrap,
+    #boardTables .diagram-slot .diagram-wrap{
+      max-width:none;
     }
   }
 
@@ -956,6 +1053,7 @@
     line-height:1.4;
   }
   #printArea h1{font-size:calc(var(--pk)*24px);margin:0 0 6px;font-family:Georgia, serif;color:#8A4B26;font-weight:700;}
+  #printArea .print-box-name{margin-left:calc(var(--pk)*24px);color:#091135;}
   #printArea .print-subtitle{color:#36394A;margin-bottom:calc(var(--pk)*6px);font-size:calc(var(--pk)*16px);font-weight:700;}
 
   /* Внутренние размеры груза + Итог — в колонке справа от чертежа ящика (см. .print-summary-col) */
@@ -977,6 +1075,10 @@
   }
   #printArea .spec-table th{color:#36394A;text-transform:uppercase;font-size:calc(var(--pk)*10px);letter-spacing:0;font-weight:700;}
   #printArea .spec-table td.num, #printArea .spec-table th.num{text-align:right;}
+  /* Табличка ленты обшивки торцов - одна ячейка на всю ширину (общие
+     правила выше задают первой колонке 48%). */
+  #printArea .spec-table.tape-table{margin-top:calc(var(--pk)*10px);}
+  #printArea .spec-table.tape-table td{width:100%;}
 
   #printArea .part-title{font-size:calc(var(--pk)*20px);font-weight:700;color:#8A4B26;margin:0 0 calc(var(--pk)*6px);}
 
@@ -1023,8 +1125,65 @@
     border:calc(var(--pk)*var(--dk)*var(--lk,1)*2px) solid #8A4B26;color:#091135;font-size:calc(var(--pk)*var(--dk)*var(--lk,1)*15px);font-weight:700;
     padding:calc(var(--pk)*var(--dk)*var(--lk,1)*2px) calc(var(--pk)*var(--dk)*var(--lk,1)*6px);white-space:nowrap;line-height:1.3;
   }
+  /* I-1 (data-i1-panel): в печати подписи относительно картинки крупнее, чем на
+     экране (15px против 13px при ширине картинки x0.885) - на чертежах I-1
+     подписи расставлены плотнее (в два ряда под фото, см. diagramBokPhoto в
+     src/i1/diagrams.js), поэтому в печати они немного уменьшены. */
+  #printArea .diagram-slot[data-i1-panel] .diagram-wrap{--lk:0.85;}
   #printArea .diagram-label-vertical{
     transform:translate(-50%,-50%) rotate(-90deg);
+  }
+
+  /* ============ Новая раскладка (body.layout-v2) - по указанию пользователя,
+     на всех типах (I-1, I-3, II-1) ============
+     1) Одна колонка, как раньше; на узком экране панель с кнопкой
+        «Рассчитать» прилипает к низу экрана; Enter в поле - расчёт.
+     4) Поле, из-за которого расчёт заблокирован, - красная рамка (.field-error).
+     9) Телефон: строки таблиц деталей - карточками. */
+  #resultsMore{display:none;}
+  /* подзаголовки групп дополнительных опций (по указанию пользователя - опции
+     разделены по смыслу) */
+  .option-group-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);padding-top:14px;border-top:1px solid var(--rule);}
+  .option-group-title:first-child{padding-top:0;border-top:none;}
+  @media screen{
+    .layout-v2 .field-error{border-color:var(--error) !important;box-shadow:0 0 0 3px rgba(194,59,44,.15);}
+
+  }
+  /* Липкая панель: у body/html стоит overflow-x:hidden - это делает body
+     контейнером прокрутки, и position:sticky не работает; clip обрезает так
+     же, но контейнером прокрутки не делает. */
+  html:has(body.layout-v2), body.layout-v2{overflow-x:clip;}
+  /* Одна колонка, как раньше (две колонки пользователь отменил): обёртки
+     .io-* только группируют разметку и на раскладку не влияют. */
+  .layout-v2 .io-grid, .layout-v2 .io-inputs, .layout-v2 .io-side{display:contents;}
+  /* 1) узкий экран: панель с кнопкой «Рассчитать» прилипает к низу, пока не дошли до неё */
+  @media screen and (max-width:1099px){
+    .layout-v2 .action-card{position:sticky;bottom:0;z-index:20;box-shadow:0 -6px 18px rgba(9,17,53,.08);}
+  }
+  @media screen and (max-width:640px){
+    .layout-v2 .action-card{padding:12px 16px;gap:8px;margin-bottom:16px;border-radius:12px 12px 0 0;}
+    /* 9) строки таблиц деталей - карточками */
+    .layout-v2 #boardTables .spec-table table,
+    .layout-v2 #boardTables .spec-table tbody{display:block;width:100%;}
+    .layout-v2 #boardTables .spec-table thead{display:none;}
+    .layout-v2 #boardTables .spec-table tr{display:grid;grid-template-columns:repeat(4,1fr);gap:2px 8px;padding:10px 12px;border-bottom:1px solid var(--rule);}
+    .layout-v2 #boardTables .spec-table tr:last-child{border-bottom:none;}
+    .layout-v2 #boardTables .spec-table td{display:block;padding:2px 0;border:none;text-align:left;}
+    .layout-v2 #boardTables .spec-table td:first-child{grid-column:1 / -1;width:auto;font-weight:700;padding-bottom:4px;}
+    /* итог на телефоне - списком: подпись слева, значение справа */
+    .layout-v2 .summary, .layout-v2 .summary.summary-4{grid-template-columns:1fr;}
+    .layout-v2 .summary > div > div{padding:0;}
+    .layout-v2 .summary > div{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:12px 14px;}
+    .layout-v2 .summary > div.time-tile{padding-right:48px;}
+    .layout-v2 .summary .time-settings-btn{top:50%;transform:translateY(-50%);}
+    .layout-v2 .summary .label{margin-bottom:0;}
+    .layout-v2 .summary .value{font-size:18px;text-align:right;}
+    .layout-v2 .action-card button, .layout-v2 .action-card .print-btn{padding-top:10px;padding-bottom:10px;}
+    .layout-v2 #boardTables .spec-table td:nth-child(n+2)::before{display:block;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:1px;}
+    .layout-v2 #boardTables .spec-table td:nth-child(2)::before{content:'Толщина';}
+    .layout-v2 #boardTables .spec-table td:nth-child(3)::before{content:'Ширина';}
+    .layout-v2 #boardTables .spec-table td:nth-child(4)::before{content:'Длина';}
+    .layout-v2 #boardTables .spec-table td:nth-child(5)::before{content:'Кол-во';}
   }
 
 </style>
@@ -1042,14 +1201,15 @@
   }
 </style>
 </head>
-<body>
+<body class="layout-v2">
 <div class="wrap">
   <div class="top-nav">
     <a href="gost-10198-91.html">← Назад</a>
     <a href="index.html">Главная</a>
   </div>
-  <header>
+  <header class="title-row">
     <h1>ГОСТ 10198-91 тип II-1</h1>
+    <input type="text" id="boxName" class="box-name-input" maxlength="100" placeholder="Номер или название ящика" aria-label="Номер или название ящика">
   </header>
 
   <div class="card">
@@ -1057,19 +1217,19 @@
     <div class="inputs">
       <div>
         <label for="L">Длина</label>
-        <input type="number" id="L" min="1">
+        <input type="number" id="L" min="1" inputmode="decimal">
       </div>
       <div>
         <label for="W">Ширина</label>
-        <input type="number" id="W" min="1">
+        <input type="number" id="W" min="1" inputmode="decimal">
       </div>
       <div>
         <label for="H">Высота</label>
-        <input type="number" id="H" min="1">
+        <input type="number" id="H" min="1" inputmode="decimal">
       </div>
       <div>
         <label for="M">Масса груза, кг</label>
-        <input type="number" id="M" min="1">
+        <input type="number" id="M" min="1" inputmode="decimal">
       </div>
     </div>
   </div>
@@ -1131,6 +1291,17 @@
   <div class="card">
     <h2>Дополнительные опции</h2>
     <div class="fastening-option-list">
+      <div class="option-group-title">Доски</div>
+      <label>
+        <input type="checkbox" id="roundBoardWidths">
+        <span>Округлить ширину досок<span class="option-hint">Все доски по 100 мм, без более узких на остаток — при таком расчёте они суммарно могут занять чуть больше места, чем есть: лишнее у последней доски подрежут на месте</span></span>
+      </label>
+      <div class="option-group-title">Брусья крышки</div>
+      <label>
+        <input type="checkbox" id="optimizeSizes">
+        <span>Оптимизировать размеры<span class="option-hint">Длина внутреннего поперечного бруса крышки уменьшается на 4 мм; при поперечном расположении досок крышки — и продольного бруса тоже</span></span>
+      </label>
+      <div class="option-group-title">Дно и полозья</div>
       <label id="removeFloorBoardsRow">
         <input type="checkbox" id="removeFloorBoards">
         <span>Убрать доски дна</span>
@@ -1147,26 +1318,24 @@
         <input type="checkbox" id="solidRigidBase">
         <span>Сплошное жёсткое основание груза<span class="option-hint">Сечение полозьев — по массе груза, а не по Табл. 19</span></span>
       </label>
-      <label>
-        <input type="checkbox" id="roundBoardWidths">
-        <span>Округлить ширину досок<span class="option-hint">Все доски по 100 мм, без более узких на остаток — при таком расчёте они суммарно могут занять чуть больше места, чем есть: лишнее у последней доски подрежут на месте</span></span>
-      </label>
-      <label>
-        <input type="checkbox" id="optimizeSizes">
-        <span>Оптимизировать размеры<span class="option-hint">Длина внутреннего поперечного бруса крышки уменьшается на 4 мм; при поперечном расположении досок крышки — и продольного бруса тоже</span></span>
-      </label>
     </div>
   </div>
 
   <div class="card action-card">
-    <button onclick="calculate()">Рассчитать</button>
+    <button id="calcBtn" onclick="calculate()">Рассчитать</button>
+    <button type="button" class="btn-secondary reset-btn" id="resetEditsBtn" onclick="resetTableEdits()" hidden>Сбросить до стандартных значений</button>
     <span class="calc-status">
+      <span class="calc-loading" id="calcLoading"><span class="spinner" aria-hidden="true"></span>Идёт расчёт…</span>
+      <span class="calc-loading" id="calcPrinting"><span class="spinner" aria-hidden="true"></span>Подготовка к печати…</span>
+      <span class="calc-loading" id="calcPdf"><span class="spinner" aria-hidden="true"></span>Создание PDF-файла…</span>
       <span class="calc-check" id="calcCheck"><span class="mark"><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Расчёт выполнен</span>
       <span class="calc-outdated" id="calcOutdated"><span class="mark"><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><line x1="8" y1="4" x2="8" y2="8.7" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="11.3" r="1.1" fill="#fff"/></svg></span>Нажмите «Рассчитать»</span>
       <span class="calc-error" id="calcError"><span class="mark mark-error"><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>Расчёт не проведён</span>
     </span>
-    <button class="print-btn btn-secondary" onclick="printBox()"><svg class="btn-icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5.5V2.5h7v3"/><rect x="3" y="5.5" width="10" height="5" rx="0.8"/><path d="M4.5 9.5v4h7v-4"/><line x1="6" y1="11.5" x2="10" y2="11.5"/></svg>Печать</button>
-    <button class="print-btn btn-secondary" onclick="downloadPdf()"><svg class="btn-icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v6.5"/><path d="M5 6.5 8 9.5 11 6.5"/><path d="M3.5 12.5h9"/></svg>Скачать PDF</button>
+    <span class="print-actions">
+      <button class="print-btn btn-secondary" onclick="printBox()"><svg class="btn-icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5.5V2.5h7v3"/><rect x="3" y="5.5" width="10" height="5" rx="0.8"/><path d="M4.5 9.5v4h7v-4"/><line x1="6" y1="11.5" x2="10" y2="11.5"/></svg>Печать</button>
+      <button class="print-btn btn-secondary" onclick="downloadPdf()"><svg class="btn-icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v6.5"/><path d="M5 6.5 8 9.5 11 6.5"/><path d="M3.5 12.5h9"/></svg>Скачать PDF</button>
+    </span>
     <div class="error" id="err"></div>
   </div>
 
@@ -2084,6 +2253,14 @@ function photoStrokeScale(imgNaturalWidth){
 const DIAGRAM_DEFAULT_WIDTH = 260;
 const DIAGRAM_MAX_HEIGHT = 240;
 
+// Подписи размеров на всех чертежах (все типы) - целые мм, с округлением
+// ВВЕРХ (по указанию пользователя: 697.4 -> 698). Допуск 1e-6 - чтобы
+// погрешность дробной арифметики (1000.0000000001) не превращала целое
+// значение в следующее.
+function dimLabel(v){
+  return Math.ceil(v - 1e-6);
+}
+
 // labelScale — необязательный доп. множитель размера подписей (шрифт, отступы,
 // белая плашка), НЕЗАВИСИМЫЙ от --dk (авто-сжатие чертежа под ширину слота,
 // см. reserveDiagramOverflow[Screen]() в src/common-print.js). --dk реагирует
@@ -2166,11 +2343,13 @@ function diagramPlaceholder(label){
 // Бок) - широкие "приземистые" фото совсем другой пропорции, и при том же
 // 210px торец на их фоне выглядел непропорционально крупным (само фото почти
 // квадратное) - там передаётся своё, меньшее значение.
-function diagramEndPanel1Raskosina(heightPlusT12Val, innerWidthVal, widthPxOverride){
+// imgOverride - необязательная подмена картинки при той же калибровке
+// (тип I-1: X-образные раскосины, см. diagramTorec в src/i1/diagrams.js).
+function diagramEndPanel1Raskosina(heightPlusT12Val, innerWidthVal, widthPxOverride, imgOverride, strokeScaleOverride){
   // Фото-чертёж для варианта с 1 раскосиной (натуральный размер 1352×1158).
   // Подпись высоты — полная высота рамы щита = высота груза + толщина доски дна.
-  const val = Math.round(heightPlusT12Val);
-  const innerWidth = Math.round(innerWidthVal);
+  const val = dimLabel(heightPlusT12Val);
+  const innerWidth = dimLabel(innerWidthVal);
 
   const records = [
     {type:'line', x1:1111, y1:36, x2:1541, y2:32},
@@ -2181,17 +2360,17 @@ function diagramEndPanel1Raskosina(heightPlusT12Val, innerWidthVal, widthPxOverr
     {type:'double', x1:30, y1:1275, x2:1330, y2:1277, lx:650, ly:1275, text: innerWidth+' мм'}
   ];
 
-  return renderDiagram(TOREC_1_IMG_B64, 'Щит торцевой (1 раскосина) - схема расположения деталей', 1352, 1158, records, widthPxOverride || 210, photoStrokeScale(1352));
+  return renderDiagram(imgOverride || TOREC_1_IMG_B64, 'Щит торцевой (1 раскосина) - схема расположения деталей', 1352, 1158, records, widthPxOverride || 210, strokeScaleOverride || photoStrokeScale(1352));
 }
 
-function diagramEndPanelNoRaskosina(heightPlusT12Val, widthVal, widthPxOverride){
+function diagramEndPanelNoRaskosina(heightPlusT12Val, widthVal, widthPxOverride, strokeScaleOverride){
   // Фото-чертёж для варианта без раскосины (H≤600мм либо W≤600мм — п.1.6.5/п.102 docx,
   // независимо друг от друга отключают раскосину на торце). Просто рамка из планок и
   // досок торца без диагоналей. Натуральный размер фото 1354×1134.
   // Высота = высота груза + толщина доски дна (то же значение, которым заполняется
   // доска торца, см. fbTorec); ширина = ширина груза (совпадает с k32).
-  const val = Math.round(heightPlusT12Val);
-  const width = Math.round(widthVal);
+  const val = dimLabel(heightPlusT12Val);
+  const width = dimLabel(widthVal);
 
   const records = [
     {type:'line', x1:1122, y1:21, x2:1562, y2:19},
@@ -2202,7 +2381,7 @@ function diagramEndPanelNoRaskosina(heightPlusT12Val, widthVal, widthPxOverride)
     {type:'double', x1:36, y1:1265, x2:1341, y2:1265, lx:696, ly:1271, text: width+' мм'}
   ];
 
-  return renderDiagram(TOREC_0_IMG_B64, 'Щит торцевой (без раскосины) - схема расположения деталей', 1354, 1134, records, widthPxOverride || 210, photoStrokeScale(1354));
+  return renderDiagram(TOREC_0_IMG_B64, 'Щит торцевой (без раскосины) - схема расположения деталей', 1354, 1134, records, widthPxOverride || 210, strokeScaleOverride || photoStrokeScale(1354));
 }
 
 // ГОСТ 10198-91, тип II-1: чертежи расположения деталей.
@@ -2460,7 +2639,7 @@ function nearestKryshkaVariant(longbeamCount, crossBeamCount){
 function diagramKryshka(longbeamCount, crossBeamCount, torecBoardVal, sideFrameVal, widthVal, lengthVal, widthPxOverride, edgeDistVal){
   const variant = nearestKryshkaVariant(longbeamCount, crossBeamCount);
   const v = KRYSHKA_VARIANTS[variant.longbeamCount + '_' + variant.crossBeamCount];
-  const records = v.records(Math.round(torecBoardVal), Math.round(sideFrameVal), Math.round(widthVal), Math.round(lengthVal), Math.round(edgeDistVal));
+  const records = v.records(dimLabel(torecBoardVal), dimLabel(sideFrameVal), dimLabel(widthVal), dimLabel(lengthVal), dimLabel(edgeDistVal));
   return renderDiagram(v.img, 'Крышка - схема расположения деталей', v.IW, v.IH, records, widthPxOverride, photoStrokeScale(v.IW));
 }
 
@@ -2493,7 +2672,7 @@ function diagramKryshka(longbeamCount, crossBeamCount, torecBoardVal, sideFrameV
 function diagramTorec(count, floors, longbeamVal, widthVal, skinVal, heightVal, floorHeightVal, widthPxOverride, labelScale){
   const variant = nearestTorecVariant(count, floors);
   const v = TOREC_VARIANTS[variant.floors][variant.count];
-  const records = v.records(Math.round(longbeamVal), Math.round(widthVal), Math.round(skinVal), Math.round(heightVal), Math.round(floorHeightVal));
+  const records = v.records(dimLabel(longbeamVal), dimLabel(widthVal), dimLabel(skinVal), dimLabel(heightVal), dimLabel(floorHeightVal));
   return renderDiagram(v.img, 'Щит торцевой - схема расположения деталей', v.IW, v.IH, records, widthPxOverride, photoStrokeScale(v.IW), labelScale);
 }
 
@@ -2743,8 +2922,8 @@ function nearestTorecVariant(count, floors){
 // Щита торцевого) - координаты из присланной пользователем разметки фото
 // dno_ii1.jpg (2008x1212).
 function diagramDno(stojkaVal, skinVal, skidWidthVal, outerLenVal){
-  const stojka = Math.round(stojkaVal), skin = Math.round(skinVal);
-  const skidWidth = Math.round(skidWidthVal), outerLen = Math.round(outerLenVal);
+  const stojka = dimLabel(stojkaVal), skin = dimLabel(skinVal);
+  const skidWidth = dimLabel(skidWidthVal), outerLen = dimLabel(outerLenVal);
   const records = [];
   records.push(
     {type:'line', x1:102, y1:676, x2:-85, y2:794},
@@ -2799,7 +2978,7 @@ function diagramDno(stojkaVal, skinVal, skidWidthVal, outerLenVal){
 function diagramBok(count, floors, longbeamVal, lengthVal, skinVal, heightVal, floorHeightVal, widthPxOverride, labelScale){
   const variant = nearestBokVariant(count, floors);
   const v = TOREC_VARIANTS[variant.floors][variant.count];
-  const records = v.records(Math.round(longbeamVal), Math.round(lengthVal), Math.round(skinVal), Math.round(heightVal), Math.round(floorHeightVal));
+  const records = v.records(dimLabel(longbeamVal), dimLabel(lengthVal), dimLabel(skinVal), dimLabel(heightVal), dimLabel(floorHeightVal));
   return renderDiagram(v.img, 'Щит боковой - схема расположения деталей', v.IW, v.IH, records, widthPxOverride, photoStrokeScale(v.IW), labelScale);
 }
 
@@ -2867,12 +3046,443 @@ const PRINT_DIAGRAM_FACTOR = 0.885;
 // computeGost... вернул calc.error) или null/любое другое значение - все
 // три скрыты (до первого расчёта, либо только что открытая пустая форма).
 function setCalcStatus(state){
-  const ids = {check:'calcCheck', outdated:'calcOutdated', error:'calcError'};
+  const ids = {check:'calcCheck', outdated:'calcOutdated', error:'calcError', loading:'calcLoading', printing:'calcPrinting', pdf:'calcPdf'};
   Object.keys(ids).forEach(key=>{
     const el = document.getElementById(ids[key]);
     if(el) el.classList.toggle('active', key === state);
   });
 }
+
+// ============ Расчёт / печать: состояние и отказы ============
+// По указанию пользователя: если действие блокируется (печать/PDF без
+// актуального расчёта, во время расчёта, после ошибки) - ВСЕГДА красный
+// статус «Расчёт не проведён» и красный текст причины (#err), а не окно
+// браузера alert(). calcInProgress/printInProgress - защита от повторных
+// нажатий: раньше каждое нажатие «Печать»/«Скачать PDF» ставило в очередь
+// своё ожидание загрузки картинок, и потом открывалось сразу несколько
+// окон печати, а печать во время расчёта ломала вёрстку (по репорту
+// пользователя).
+let calcInProgress = false;
+let printInProgress = false;
+let lastRefusalText = '';
+function refuseAction(reason){
+  clearCalcHint();
+  setCalcStatus('error');
+  const errEl = document.getElementById('err');
+  if(errEl) errEl.textContent = reason;
+  lastRefusalText = reason;
+  // Отказ во время расчёта (напр. «Печать» до ответа сервера) - красный
+  // статус виден 1.5 с, затем снова «Идёт расчёт…», если расчёт ещё идёт.
+  if(calcInProgress){
+    setTimeout(()=>{
+      const errSt = document.getElementById('calcError');
+      if(calcInProgress && errSt && errSt.classList.contains('active')) setCalcStatus('loading');
+    }, 1500);
+  }
+}
+// Печать/PDF разрешены, если на экране есть результаты расчёта - даже если
+// после него меняли таблицу или параметры и не нажимали «Рассчитать» (по
+// указанию пользователя): печатается то, что на экране, без пересчёта и
+// без пометок. Нельзя только во время расчёта и когда результатов нет
+// (ещё не считали либо расчёт заблокирован ошибкой - блок #results скрыт).
+// Возвращает true, если можно печатать.
+// Нейтральная (не красная) подсказка в #err - на 2.5 с, статус не меняет.
+let calcHintTimer = null;
+function showCalcHint(text){
+  const errEl = document.getElementById('err');
+  if(!errEl) return;
+  errEl.textContent = text;
+  errEl.dataset.hintText = text;
+  errEl.classList.add('hint');
+  clearTimeout(calcHintTimer);
+  calcHintTimer = setTimeout(clearCalcHint, 2500);
+}
+function clearCalcHint(){
+  const errEl = document.getElementById('err');
+  clearTimeout(calcHintTimer);
+  if(!errEl || !errEl.classList.contains('hint')) return;
+  errEl.classList.remove('hint');
+  // текст стираем, только если это всё ещё сама подсказка (а не ошибка
+  // расчёта, успевшая её заменить)
+  if(errEl.textContent === errEl.dataset.hintText) errEl.textContent = '';
+}
+function printAllowed(){
+  if(printInProgress) return false; // уже готовится - повторное нажатие просто игнорируется
+  if(calcInProgress){
+    // Во время расчёта - не отказ (статус остаётся «Идёт расчёт…», без
+    // красного «Расчёт не проведён» - по указанию пользователя), а только
+    // короткая нейтральная подсказка под кнопками.
+    showCalcHint('Дождитесь окончания расчёта.');
+    return false;
+  }
+  const results = document.getElementById('results');
+  if(!results || results.style.display !== 'block'){
+    refuseAction('Печать недоступна: нет результатов расчёта — сначала нажмите «Рассчитать».');
+    return false;
+  }
+  return true;
+}
+// Ожидание загрузки картинок печатной области - не дольше 3 с (иначе
+// зависшее ожидание копило нажатия, см. выше).
+function waitImagesReady(scaleBox){
+  const images = Array.from(scaleBox.querySelectorAll('img'));
+  const ready = Promise.all(images.map(img => img.decode ? img.decode().catch(()=>{}) : Promise.resolve()));
+  return Promise.race([ready, new Promise(r => setTimeout(r, 3000))]);
+}
+// Индикатор подготовки печати/PDF (по указанию пользователя - как «Идёт
+// расчёт…»): статус 'printing' («Подготовка к печати…») или 'pdf'
+// («Создание PDF-файла…») со спиннером; кнопка «Рассчитать» на это время
+// недоступна. По окончании возвращается прежний статус (если за это время
+// его не сменили - напр. правкой параметров).
+function currentCalcStatus(){
+  const ids = {check:'calcCheck', outdated:'calcOutdated', error:'calcError', loading:'calcLoading', printing:'calcPrinting', pdf:'calcPdf'};
+  for(const k of Object.keys(ids)){ const el = document.getElementById(ids[k]); if(el && el.classList.contains('active')) return k; }
+  return null;
+}
+// Снимок входных данных последнего успешного расчёта (по указанию
+// пользователя): если параметр изменили, а потом вернули как было, -
+// подсказка «Нажмите «Рассчитать»» снимается и снова показывается
+// «Расчёт выполнен». Сравниваются сами входные данные расчёта
+// (buildCalcInput() каждого типа) плюс правки таблиц, толщины «в наличии» и
+// настройки нормы времени - без пересчёта и без запросов к серверу.
+let calcStateSnapshot = null;
+// То же для расчёта, заблокированного ошибкой: параметры и текст причины (по
+// замечанию пользователя: после блокировки событие изменения поля - напр. при
+// уходе фокуса из поля, куда уже ввели значение, - меняло «Расчёт не проведён»
+// на жёлтое «Нажмите «Рассчитать»», а красная причина оставалась).
+let calcErrorSnapshot = null;
+// Нажимали ли «Рассчитать» хоть раз с открытия страницы (см. markCalcChanged).
+let calcEverRun = false;
+function calcStateSignature(){
+  if(typeof buildCalcInput !== 'function') return null;
+  try{
+    const input = buildCalcInput();
+    // I-1: без галочек «Настроить число поясов / расстояние» значение
+    // ползунка в расчёт не идёт - не сравниваем его.
+    if(input && !input.plankLayoutMode && 'plankLayoutValue' in input) input.plankLayoutValue = null;
+    return JSON.stringify({
+      input,
+      tableEdits: readTableEdits(),
+      thicknesses: typeof availableThicknesses !== 'undefined' ? availableThicknesses : null,
+      time: typeof TIME_SETTINGS_STORAGE_KEY !== 'undefined' ? loadTimeSettings(TIME_SETTINGS_STORAGE_KEY) : null,
+    });
+  }catch(e){
+    return null;
+  }
+}
+// Вызывается из invalidateCalc() каждого типа при любом изменении параметров.
+// После заблокированного расчёта: параметры те же - остаётся «Расчёт не
+// проведён» с причиной; изменились - «Нажмите «Рассчитать»», а красная причина
+// (она про прежние параметры) убирается; вернули как было - снова ошибка.
+function markCalcChanged(){
+  // До первого нажатия «Рассчитать» (форму только заполняют) - никакой
+  // подсказки (по указанию пользователя).
+  if(!calcEverRun) return;
+  const st = currentCalcStatus();
+  if(calcErrorSnapshot !== null && !calcInProgress && (st === 'error' || st === 'outdated')){
+    const errEl = document.getElementById('err');
+    if(calcStateSignature() === calcErrorSnapshot.sig){
+      setCalcStatus('error');
+      if(errEl) errEl.textContent = calcErrorSnapshot.text;
+      highlightErrorFields(false);
+      return;
+    }
+    if(errEl && errEl.textContent === calcErrorSnapshot.text) errEl.textContent = '';
+    setCalcStatus('outdated');
+    return;
+  }
+  if(calcStateSnapshot !== null && !calcInProgress && (st === 'outdated' || st === 'check')
+     && calcStateSignature() === calcStateSnapshot){
+    setCalcStatus('check');
+    return;
+  }
+  setCalcStatus('outdated');
+}
+// Подсветка поля, из-за которого расчёт заблокирован (по указанию пользователя):
+// тип объявляет errorFieldsFor(текст ошибки) -> id полей (I-1, I-3, II-1);
+// если функции нет - ничего не подсвечивается. Рамка снимается
+// при вводе в поле и при следующем расчёте.
+function highlightErrorFields(scroll){
+  document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+  if(typeof errorFieldsFor !== 'function' || currentCalcStatus() !== 'error') return;
+  const errEl = document.getElementById('err');
+  const els = errorFieldsFor(errEl ? errEl.textContent : '')
+    .map(id => document.getElementById(id)).filter(el => el && el.offsetParent !== null);
+  els.forEach(el => el.classList.add('field-error'));
+  if(scroll && els.length) els[0].scrollIntoView({block:'center', behavior:'smooth'});
+}
+document.addEventListener('input', e=>{
+  if(e.target.classList && e.target.classList.contains('field-error')) e.target.classList.remove('field-error');
+});
+// Enter в числовом поле параметров (не в таблице деталей и не в окнах
+// настроек) - «Рассчитать» (по указанию пользователя; страницы новой
+// раскладки - body.layout-v2).
+document.addEventListener('keydown', e=>{
+  if(e.key !== 'Enter' || !document.body.classList.contains('layout-v2')) return;
+  const t = e.target;
+  if(!t.matches || !t.matches('input[type="number"]') || t.closest('#boardTables, .modal-overlay, #printArea')) return;
+  e.preventDefault();
+  t.blur();
+  calculate();
+});
+function beginPrintJob(kind){
+  printInProgress = true;
+  const prev = currentCalcStatus();
+  const btn = document.getElementById('calcBtn');
+  if(btn) btn.disabled = true;
+  setCalcStatus(kind);
+  // Кадр отрисовки - чтобы индикатор показался до тяжёлой сборки листа.
+  return new Promise(r => requestAnimationFrame(() => setTimeout(() => r(prev), 0)));
+}
+function endPrintJob(kind, prev){
+  printInProgress = false;
+  const btn = document.getElementById('calcBtn');
+  if(btn) btn.disabled = calcInProgress;
+  if(currentCalcStatus() === kind) setCalcStatus(prev);
+}
+function setCalcInProgress(v){
+  calcInProgress = v;
+  const btn = document.getElementById('calcBtn');
+  if(btn) btn.disabled = v;
+}
+// Общая обёртка кнопки «Рассчитать» (у каждого типа своя calculateNow() -
+// сам расчёт и рендер): индикатор «Идёт расчёт…», пока он идёт (по
+// указанию пользователя), и защита от повторного запуска. Кадр отрисовки
+// перед расчётом - чтобы индикатор успел показаться и в статичной версии,
+// где расчёт синхронный.
+async function calculate(){
+  if(calcInProgress || printInProgress) return;
+  calcEverRun = true;
+  setCalcInProgress(true);
+  setCalcStatus('loading');
+  await new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
+  try{
+    await calculateNow();
+  }catch(e){
+    console.error(e);
+    refuseAction('Не удалось выполнить расчёт. Проверьте введённые данные и повторите.');
+  }finally{
+    setCalcInProgress(false);
+    clearCalcHint();
+    const loading = document.getElementById('calcLoading');
+    if(loading && loading.classList.contains('active')) setCalcStatus(null);
+    // Текст отказа, выданного во время расчёта (напр. «Идёт расчёт —
+    // дождитесь…»), после успешного расчёта уже неактуален.
+    const check = document.getElementById('calcCheck'), errEl = document.getElementById('err');
+    if(check && check.classList.contains('active') && errEl && lastRefusalText && errEl.textContent === lastRefusalText) errEl.textContent = '';
+    lastRefusalText = '';
+    showManualEditsWarning();
+    updateResetButton();
+    // Снимок - только после успешного расчёта (см. markCalcChanged()).
+    calcErrorSnapshot = null;
+    if(currentCalcStatus() === 'check'){
+      rememberCellOriginals();
+      calcStateSnapshot = calcStateSignature();
+    } else {
+      calcStateSnapshot = null;
+      const errEl = document.getElementById('err');
+      if(currentCalcStatus() === 'error' && errEl && errEl.textContent) calcErrorSnapshot = {sig: calcStateSignature(), text: errEl.textContent};
+    }
+    highlightErrorFields(true);
+  }
+}
+// Предупреждение о ручных правках (по указанию пользователя): правки таблиц
+// сохраняются между расчётами и заменяют расчётные значения - после
+// успешного расчёта, если они есть, в общий блок предупреждений (#warningsTop,
+// только на экране) добавляется строка об этом; иначе после смены исходных
+// данных (напр. числа поясов планок) казалось бы, что «Рассчитать» ничего не
+// сделал - ручное значение в таблице оставалось прежним.
+const MANUAL_EDITS_WARNING = 'В таблицах есть ручные правки (выделены цветом) — они заменяют расчётные значения. Чтобы вернуть расчётные, нажмите «Сбросить до стандартных значений».';
+function showManualEditsWarning(){
+  const el = document.getElementById('warningsTop');
+  if(!el) return;
+  const old = el.querySelector('.manual-edits-warning');
+  if(old) old.remove();
+  const check = document.getElementById('calcCheck');
+  const hasEdits = !!document.querySelector('#boardTables [data-user-edited="true"]');
+  if(!hasEdits || !check || !check.classList.contains('active')) return;
+  if(!el.innerHTML.trim()){
+    el.innerHTML = '<div style="color:var(--warn);margin-bottom:10px;font-weight:700;">Внимание:</div>';
+  }
+  el.insertAdjacentHTML('beforeend', `<div class="manual-edits-warning" style="margin-bottom:8px;">⚠ ${MANUAL_EDITS_WARNING}</div>`);
+  el.style.display = 'block';
+}
+// Кнопка «Сбросить до стандартных значений» - видна, пока в таблицах есть
+// ручные правки; сбрасывает их все (толщины, размеры, количество, лента) и
+// сразу пересчитывает (по указанию пользователя). Размеры груза и галочки
+// не трогает.
+function updateResetButton(){
+  const btn = document.getElementById('resetEditsBtn');
+  if(btn) btn.hidden = !document.querySelector('#boardTables [data-user-edited="true"]');
+}
+function resetTableEdits(){
+  if(calcInProgress || printInProgress) return;
+  document.querySelectorAll('#boardTables [data-user-edited]').forEach(el => el.removeAttribute('data-user-edited'));
+  updateResetButton();
+  calculate();
+}
+// Номер/название ящика (поле #boxName справа от заголовка) - в печать/PDF
+// справа от заголовка; пустое - ничего не выводится.
+function boxNameHtml(){
+  const el = document.getElementById('boxName');
+  const v = el ? el.value.trim() : '';
+  return v ? `<span class="print-box-name">${escapeAttr(v)}</span>` : '';
+}
+
+// ============ Ручные правки таблицы деталей ============
+// По указанию пользователя: правка любой ячейки таблицы деталей (толщина,
+// ширина, длина, кол-во) НЕ пересчитывает итоги сразу - только помечает
+// расчёт как устаревший (подсказка «Нажмите «Рассчитать»»); пересчёт - по кнопке
+// "Рассчитать" (в бэкенд-версии - на сервере, как и весь остальной расчёт).
+// Правки толщины у строк с data-override по-прежнему идут в расчёт
+// каскадом (manualOverrides); остальные правки (ширина/длина/кол-во и
+// толщина строк без data-override) передаются как tableEdits и
+// подставляются в строки результата - итоговый объём (а с ним масса и
+// норма времени) пересчитываются с учётом правок (см. applyTableEdits).
+// Строка таблицы опознаётся по разделу (data-section) и ключу
+// "название#порядковый номер среди строк с тем же названием" - а не по
+// номеру строки: при смене параметров строки могут появляться/исчезать.
+// Отредактированные ячейки остаются помеченными (data-user-edited) и после
+// пересчёта - правка сохраняется, пока пользователь её не изменит (пустая
+// ячейка = вернуть расчётное значение).
+const TABLE_EDIT_ROLES = ['t', 'w', 'l', 'qty'];
+function tableRowKeys(rows){
+  const occ = {};
+  return rows.map(r=>{
+    const n = String(r.name);
+    const i = occ[n] || 0;
+    occ[n] = i + 1;
+    return n + '#' + i;
+  });
+}
+function escapeAttr(s){
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+// Атрибут data-user-edited для ячейки при рендере: у толщины строк с
+// data-override - если эта толщина была задана вручную (manualOverrides),
+// у остальных - если ячейка была исправлена через tableEdits (row.edited).
+function editedAttr(row, role, manualOverrides){
+  if(role === 't' && row.overrideKey){
+    return (manualOverrides && manualOverrides[row.overrideKey] !== undefined) ? ' data-user-edited="true"' : '';
+  }
+  return (row.edited && row.edited[role]) ? ' data-user-edited="true"' : '';
+}
+// Толщина в таблице деталей: правка ЛЮБОЙ строки меняет параметр ГОСТ, из
+// которого эта толщина берётся (data-override), поэтому все строки с тем же
+// параметром сразу получают то же значение (последняя правка побеждает).
+function syncOverrideCells(cell){
+  const key = cell && cell.getAttribute && cell.getAttribute('data-override');
+  if(!key) return;
+  const v = cell.textContent;
+  document.querySelectorAll(`#boardTables td[data-override="${key}"]`).forEach(td=>{
+    if(td !== cell){ td.textContent = v; markCellEdited(td); }
+  });
+}
+// Пометка правки ячейки (по указанию пользователя): если значение вернули
+// к тому, что было показано после последнего расчёта, - пометка
+// возвращается к прежней (цвет правки снимается, если ячейка не была
+// исправлена и до этого). Исходные тексты запоминает rememberCellOriginals()
+// после каждого успешного расчёта (см. calculate()).
+function markCellEdited(cell){
+  if('origText' in cell.dataset && cell.textContent.trim() === cell.dataset.origText.trim()){
+    if(cell.dataset.origEdited) cell.setAttribute('data-user-edited', 'true');
+    else cell.removeAttribute('data-user-edited');
+    return;
+  }
+  cell.setAttribute('data-user-edited', 'true');
+}
+function rememberCellOriginals(){
+  document.querySelectorAll('#boardTables .editable-cell').forEach(td=>{
+    td.dataset.origText = td.textContent;
+    td.dataset.origEdited = td.getAttribute('data-user-edited') === 'true' ? '1' : '';
+  });
+}
+function readTableEdits(){
+  const edits = {};
+  document.querySelectorAll('#boardTables table[data-section] tr[data-row-key]').forEach(tr=>{
+    const sec = tr.closest('table').dataset.section;
+    const key = tr.dataset.rowKey;
+    tr.querySelectorAll('td[data-user-edited="true"]:not([data-override])').forEach(td=>{
+      const role = td.dataset.role;
+      // role 'text' - ячейка со свободным текстом (лента обшивки торцов:
+      // править можно весь текст, не только число); пустая - расчётное.
+      let v;
+      if(role === 'text'){
+        v = td.textContent.trim();
+        if(!v) return;
+      } else {
+        v = parseFloat(td.textContent.replace(',', '.'));
+        if(!TABLE_EDIT_ROLES.includes(role) || !Number.isFinite(v) || v < 0 || (v === 0 && role !== 'qty')) return;
+      }
+      edits[sec] = edits[sec] || {};
+      edits[sec][key] = edits[sec][key] || {};
+      edits[sec][key][role] = v;
+    });
+  });
+  return edits;
+}
+
+// Подставляет правки таблицы (см. readTableEdits) в строки результата и
+// корректирует итоговый объём на разницу объёмов изменённых строк (с
+// множителем раздела: щиты торцевой/боковой - по 2 шт.). Возвращает число
+// изменённых строк - вызывающая сторона при >0 пересчитывает производные
+// итоги (норма времени, масса ящика). Та же функция - на сервере
+// (applyTableEdits в backend/src/helpers.js бэкенд-репозитория).
+function applyTableEdits(calc, edits, sections){
+  if(!edits || typeof edits !== 'object') return 0;
+  const num = v => { const x = parseFloat(v); return Number.isFinite(x) ? x : 0; };
+  const rowVol = r => num(r.t) * num(r.w) * num(r.l) / 1e9 * num(r.qty);
+  let applied = 0, delta = 0;
+  Object.keys(sections).forEach(sec=>{
+    const rows = calc[sec], secEdits = edits[sec];
+    if(!Array.isArray(rows) || !secEdits) return;
+    const keys = tableRowKeys(rows);
+    rows.forEach((r, i)=>{
+      const e = secEdits[keys[i]];
+      if(!e) return;
+      const before = rowVol(r);
+      let changed = false;
+      TABLE_EDIT_ROLES.forEach(role=>{
+        if(!(role in e)) return;
+        if(role === 't' && r.overrideKey) return; // толщина - через manualOverrides
+        r[role] = e[role];
+        r.edited = r.edited || {};
+        r.edited[role] = true;
+        changed = true;
+      });
+      if((sec === 'endTape' || sec === 'parchment') && typeof e.text === 'string'){ r.text = e.text; r.edited = r.edited || {}; r.edited.text = true; changed = true; }
+      if(!changed) return;
+      delta += (rowVol(r) - before) * sections[sec];
+      applied++;
+    });
+  });
+  if(applied) calc.totalVolume += delta;
+  return applied;
+}
+
+// Общий слушатель "параметры изменились" (по указанию пользователя: при
+// изменении ЛЮБОГО параметра - цифры, галочки, радио, выпадающего списка
+// толщин и т.д. - должна появляться подсказка «Нажмите «Рассчитать»»; надпись
+// «Расчёт не проведён» - только когда расчёт заблокирован ошибкой). Раньше
+// invalidateCalc() вызывался точечно из обработчиков отдельных полей, и
+// часть галочек (напр. "Добавить раскосины", "X-образные раскосины",
+// "Убрать раскосины крышки и дна") её не вызывала вовсе - после их
+// переключения старый результат выглядел актуальным. Исключения: поле
+// комментария (в расчёт не входит, только в печать), таблица деталей
+// (#boardTables - у неё свой обработчик: помечает ячейку как исправленную
+// и так же вызывает invalidateCalc(), см. calculate() каждого типа) и окно
+// настроек нормы времени (invalidateCalc() вызывает его applySettings в
+// common-timesettings.js - только при реальном сохранении корректного
+// значения).
+function onAnyParamChange(e){
+  const t = e.target;
+  if(!t || !t.matches || !t.matches('input, select, textarea')) return;
+  if(t.id === 'userComment' || t.id === 'boxName') return; // в расчёт не входят
+  if(t.closest('#boardTables, #timeSettingsOverlay, #densitySettingsOverlay, #printArea')) return;
+  if(typeof invalidateCalc === 'function') invalidateCalc();
+}
+document.addEventListener('input', onAnyParamChange);
+document.addEventListener('change', onAnyParamChange);
 
 // Собирает содержимое #printArea из текущих результатов и проставляет
 // data-base-width у чертежей (см. комментарий ниже, откуда он был раньше) -
@@ -2900,27 +3510,22 @@ function buildAndSizePrintArea(){
 }
 
 function printBox(){
-  if(document.getElementById('results').style.display !== 'block'){
-    alert('Сначала выполните расчёт — нажмите «Рассчитать».');
-    return;
-  }
-
-  buildAndSizePrintArea();
-  const scaleBox = document.getElementById('printScale');
-
+  if(!printAllowed()) return;
   // Важно: сразу после innerHTML браузер мог ещё не декодировать вставленные
   // <img> (чертежи, общий вид ящика, водяной знак) — их scrollHeight в этот
   // момент может быть занижен. Раньше это скрывалось запасом по высоте;
   // как только запас исчез (например, из-за добавленного комментария),
   // страница начала не помещаться на печати, хотя при замере «влезала».
   // Поэтому ждём decode() всех картинок и только потом меряем и подгоняем.
-  const images = Array.from(scaleBox.querySelectorAll('img'));
-  const ready = images.map(img => img.decode ? img.decode().catch(()=>{}) : Promise.resolve());
-
-  Promise.all(ready).then(()=>{
+  let prev = null;
+  beginPrintJob('printing').then(p=>{
+    prev = p;
+    buildAndSizePrintArea();
+    return waitImagesReady(document.getElementById('printScale'));
+  }).then(()=>{
     fitPrintAreaToOnePage(document.getElementById('printArea'));
     window.print();
-  });
+  }).finally(()=>{ endPrintJob('printing', prev); });
 }
 
 // Стрелки/линии размеров на чертежах (записи с x1/y1/x2/y2 в records, см.
@@ -3060,21 +3665,17 @@ function rasterizeDiagramArrows(printArea){
 // ни на миг не меняется, поэтому никакого мелькания макета печати на экране
 // не возникает.
 function downloadPdf(){
-  if(document.getElementById('results').style.display !== 'block'){
-    alert('Сначала выполните расчёт — нажмите «Рассчитать».');
-    return;
-  }
+  if(!printAllowed()) return;
   if(!window.html2canvas || !(window.jspdf && window.jspdf.jsPDF)){
-    alert('Не удалось подготовить PDF. Попробуйте обновить страницу или воспользуйтесь кнопкой «Печать» (в диалоге печати можно сохранить как PDF).');
+    refuseAction('Не удалось подготовить PDF. Обновите страницу или воспользуйтесь кнопкой «Печать» (в диалоге печати можно сохранить как PDF).');
     return;
   }
-
-  buildAndSizePrintArea();
-  const scaleBox = document.getElementById('printScale');
-  const images = Array.from(scaleBox.querySelectorAll('img'));
-  const ready = images.map(img => img.decode ? img.decode().catch(()=>{}) : Promise.resolve());
-
-  Promise.all(ready).then(()=>{
+  let prev = null;
+  beginPrintJob('pdf').then(p=>{
+    prev = p;
+    buildAndSizePrintArea();
+    return waitImagesReady(document.getElementById('printScale'));
+  }).then(()=>{
     const printArea = document.getElementById('printArea');
     fitPrintAreaToOnePage(printArea);
     bakeDiagramArrowStrokeWidths(printArea);
@@ -3109,8 +3710,8 @@ function downloadPdf(){
     doc.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', m, m, w, h);
     doc.save('gost-10198-91-raschet.pdf');
   }).catch(() => {
-    alert('Не удалось создать PDF-файл. Попробуйте ещё раз или воспользуйтесь кнопкой «Печать» (в диалоге печати можно сохранить как PDF).');
-  });
+    refuseAction('Не удалось создать PDF-файл. Попробуйте ещё раз или воспользуйтесь кнопкой «Печать» (в диалоге печати можно сохранить как PDF).');
+  }).finally(() => { endPrintJob('pdf', prev); });
 }
 
 // Подстраховка на случай печати НЕ через кнопку «Печать»/«Скачать PDF»
@@ -3144,6 +3745,50 @@ window.addEventListener('beforeprint', ()=>{
 // на 2 этажа), обрезалось бы уже на самой печати, т.к. вылет влево не
 // увеличивает scrollWidth и потому не ловится проверкой fits() в
 // fitPrintAreaToOnePage - страница «влезала» при замере, а печатала обрезанной.
+// Чертежи I-3/II-1 (по указанию пользователя, как у I-1): каждый чертёж
+// занимает всё своё место в слоте - если после подгонки по вылету подписей
+// место по ширине ещё остаётся, картинка увеличивается (подписи - прежнего
+// размера, --dk не растёт) до ширины слота, но не выше DIAGRAM_GROW_MAX_H
+// (та же предельная высота картинки, что и у чертежей I-1). Чертежи I-1
+// (data-i1-panel) уже рассчитаны на максимальный размер, общий вид ящика
+// (без стрелок) - не чертёж; их не трогаем.
+const DIAGRAM_GROW_MAX_H = 240;
+function diagramCanGrow(slot, wrap){
+  return !slot.hasAttribute('data-i1-panel') && !!wrap.querySelector('svg.diagram-arrows');
+}
+// При увеличении картинки линии SVG (толщина задана в единицах viewBox)
+// утолщались бы пропорционально - компенсируем, чтобы на экране они
+// оставались прежней толщины (в печати толщину задаёт CSS).
+function setDiagramStrokeGrowth(wrap, g){
+  wrap.querySelectorAll('svg.diagram-arrows line').forEach(l=>{
+    if(!l.dataset.sw0) l.dataset.sw0 = l.getAttribute('stroke-width') || '';
+    const sw0 = parseFloat(l.dataset.sw0);
+    if(sw0) l.setAttribute('stroke-width', String(sw0 / g));
+  });
+}
+// Общий подбор увеличения: widthOf(g) выставляет ширину, measureGaps()
+// возвращает {box, lo, ro} (картинка и вылеты слева/справа с запасом).
+function growDiagramToSlot(slotWidth, maxH, setWidth, measureGaps){
+  let g = 1;
+  for(let i = 0; i < 6; i++){
+    const m = measureGaps();
+    if(!m.box.width || !m.box.height) break;
+    const k = Math.min((slotWidth - 4 - m.lo - m.ro) / m.box.width, maxH / m.box.height);
+    const next = Math.max(1, g * k);
+    if(Math.abs(next - g) < 0.005) break;
+    g = next;
+    setWidth(g);
+  }
+  // Подстраховка: если после последнего шага охват всё же не влез - шаг назад.
+  for(let i = 0; i < 6 && g > 1; i++){
+    const m = measureGaps();
+    if(m.lo + m.box.width + m.ro <= slotWidth) break;
+    g = Math.max(1, g * (slotWidth - 4) / (m.lo + m.box.width + m.ro));
+    setWidth(g);
+  }
+  return g;
+}
+
 function reserveDiagramOverflow(printArea){
   function processSlot(slot, wrap, forcedScale){
     slot.style.paddingTop = '0px';
@@ -3240,6 +3885,22 @@ function reserveDiagramOverflow(printArea){
         scale = Math.max(0.3, scale * (slotWidth - 4 - leftGap0) / (mi.box.width + rightGap));
         wrap.style.width = Math.round(fullWidth * scale) + 'px';
         wrap.style.setProperty('--dk', scale.toFixed(3));
+      }
+      if(scale >= 1 && diagramCanGrow(slot, wrap)){
+        const pk = parseFloat(getComputedStyle(slot).getPropertyValue('--pk')) || 1;
+        const g = growDiagramToSlot(slotWidth, DIAGRAM_GROW_MAX_H * pk,
+          g => { wrap.style.width = Math.round(fullWidth * g) + 'px'; },
+          () => {
+            wrap.style.marginLeft = '0px';
+            const mi = measure();
+            return {box: mi.box, lo: Math.max(0, Math.ceil(mi.box.left - mi.left)) + SAFETY_PAD, ro: Math.max(0, Math.ceil(mi.right - mi.box.right)) + SAFETY_PAD};
+          });
+        if(g > 1){
+          // вертикальный вылет подписей - заново, под новый размер картинки
+          const mg = measure();
+          slot.style.paddingTop = Math.max(0, Math.ceil(mg.box.top - mg.top)) + 'px';
+          slot.style.paddingBottom = Math.max(0, Math.ceil(mg.bottom - mg.box.bottom)) + 'px';
+        }
       }
     }
 
@@ -3422,6 +4083,17 @@ function reserveDiagramOverflowScreen(container){
         wrap.style.width = Math.round(baseWidth * scale) + 'px';
         wrap.style.setProperty('--dk', scale.toFixed(3));
       }
+      let grow = 1;
+      if(scale >= 1 && diagramCanGrow(slot, wrap)){
+        grow = growDiagramToSlot(slotBudget, DIAGRAM_GROW_MAX_H,
+          g => { wrap.style.width = Math.round(baseWidth * g) + 'px'; },
+          () => {
+            wrap.style.marginLeft = '0px';
+            const m = measure();
+            return {box: m.box, lo: Math.max(0, Math.ceil(m.box.left - m.left)) + SAFETY_PAD, ro: Math.max(0, Math.ceil(m.right - m.box.right)) + SAFETY_PAD};
+          });
+      }
+      setDiagramStrokeGrowth(wrap, grow);
     }
 
     wrap.style.marginLeft = '0px';
@@ -3581,13 +4253,6 @@ const TIME_SETTINGS_PRODUCTIVITY_STEPS = [0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.
 const TIME_SETTINGS_COEFF_STEPS = [0.5, 0.7, 1.0, 1.2, 1.5, 2.0, 3.0];
 const TIME_SETTINGS_DEFAULTS = { baseProductivity: 0.06, timeCoeff: 1.0 };
 
-// totalVolume последнего расчёта - запоминается при каждом вызове
-// computeNormaVremeni() (единственное место, где объём и ключ хранения
-// оказываются вместе), чтобы при изменении ползунков в уже открытой
-// шестерёнке можно было сразу пересчитать и обновить плитку, не заставляя
-// пользователя заново нажимать «Рассчитать».
-let _timeSettingsLastVolume = null;
-
 function loadTimeSettings(storageKey){
   try{
     const raw = localStorage.getItem(storageKey);
@@ -3609,7 +4274,6 @@ function saveTimeSettings(storageKey, settings){
 }
 
 function computeNormaVremeni(totalVolume, storageKey){
-  _timeSettingsLastVolume = totalVolume;
   const s = loadTimeSettings(storageKey);
   return roundup((totalVolume / s.baseProductivity) * s.timeCoeff, 1);
 }
@@ -3727,13 +4391,13 @@ function initTimeSettings(storageKey){
   const tcSliderEl = document.getElementById('timeCoeffSlider');
   const tcInput = document.getElementById('timeCoeffInput');
 
+  // По указанию пользователя - настройки нормы времени, как и любые другие
+  // параметры, применяются только по «Рассчитать» (в бэкенд-версии - на
+  // сервере): здесь только сохраняем их и помечаем расчёт как устаревший
+  // (подсказка «Нажмите «Рассчитать»», см. invalidateCalc()).
   function applySettings(next){
     saveTimeSettings(storageKey, next);
-    if(_timeSettingsLastVolume != null){
-      const val = computeNormaVremeni(_timeSettingsLastVolume, storageKey);
-      const el = document.getElementById('outTime');
-      if(el) el.innerHTML = `${val} <span>ч</span>`;
-    }
+    if(typeof invalidateCalc === 'function') invalidateCalc();
   }
 
   const bpSlider = createJumpSlider(bpSliderEl, TIME_SETTINGS_PRODUCTIVITY_STEPS, v=>{
@@ -3778,14 +4442,63 @@ function initTimeSettings(storageKey){
   };
 }
 
+// ============ Плотность древесины («Масса ящика») ============
+// Шестерёнка у плитки «Масса ящика» (по указанию пользователя - по аналогии с
+// настройками нормы времени): масса ящика = объём пиломатериала × плотность.
+// По умолчанию 700 кг/м³; остановки ползунка - 400..900 кг/м³ с шагом 50
+// (от лёгкой сухой хвои ~450 до тяжёлых лиственных пород/сырой древесины
+// ~850-900), любое другое значение - в поле ручного ввода. Хранится в
+// localStorage отдельно для каждого типа ящика (ключ передаётся в
+// initDensitySettings()), применяется только по «Рассчитать».
+const WOOD_DENSITY_STEPS = [400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900];
+const WOOD_DENSITY_DEFAULT = 700;
+
+function loadWoodDensity(storageKey){
+  try{
+    const v = Number(localStorage.getItem(storageKey));
+    if(v > 0) return v;
+  }catch(e){}
+  return WOOD_DENSITY_DEFAULT;
+}
+
+function initDensitySettings(storageKey){
+  const overlay = document.getElementById('densitySettingsOverlay');
+  const sliderEl = document.getElementById('woodDensitySlider');
+  const input = document.getElementById('woodDensityInput');
+  if(!overlay || !sliderEl || !input) return;
+
+  function apply(v){
+    try{ localStorage.setItem(storageKey, String(v)); }catch(e){}
+    if(typeof invalidateCalc === 'function') invalidateCalc();
+  }
+  const slider = createJumpSlider(sliderEl, WOOD_DENSITY_STEPS, v=>{ input.value = v; apply(v); });
+
+  window.onDensitySettingsOpen = function(){
+    const v = loadWoodDensity(storageKey);
+    slider.setValue(v);
+    input.value = v;
+    overlay.hidden = false;
+  };
+  window.onDensitySettingsClose = function(){ overlay.hidden = true; };
+  window.onDensitySettingsOverlayClick = function(event){
+    if(event.target === overlay) overlay.hidden = true;
+  };
+  window.onWoodDensityInputChange = function(){
+    const v = parseFloat(String(input.value).replace(',', '.'));
+    if(!(v > 0)) return;
+    slider.setValue(v);
+    apply(v);
+  };
+}
+
 
 // ============ Фильтр толщин пиломатериала "в наличии" ============
 // Тот же механизм, что и в остальных калькуляторах, свой ключ localStorage.
-const THICKNESS_STORAGE_KEY = 'gost10198-ii1-available-thickness';
+const THICKNESS_STORAGE_KEY = 'silvan-gost10198-ii1-available-thickness';
 const AVAILABLE_THICKNESS_OPTIONS = [16, 19, 22, 25, 32, 40, 50, 60, 75, 100, 125, 150, 175, 200, 225, 250];
 // Настройки шестерёнки у плитки "Норма времени" - свой ключ localStorage
 // для этого типа ящика (см. src/common-timesettings.js).
-const TIME_SETTINGS_STORAGE_KEY = 'gost10198-ii1-time-settings';
+const TIME_SETTINGS_STORAGE_KEY = 'silvan-gost10198-ii1-time-settings';
 
 function loadAvailableThicknesses(){
   try{
@@ -3830,8 +4543,12 @@ function buildThicknessCheckboxList(){
 // src/ii1/shell.html) - до первого расчёта её показывать нечего, поле ещё
 // пустое, а не "устаревшее".
 function invalidateCalc(){
-  const results = document.getElementById('results');
-  setCalcStatus(results && results.style.display === 'block' ? 'outdated' : null);
+  // По указанию пользователя - при ЛЮБОМ изменении параметров (цифры,
+  // галочки, выпадающие списки...) сразу подсказка «Нажмите «Рассчитать»», но
+  // только после первого нажатия «Рассчитать» (позднее указание пользователя:
+  // при первом заполнении формы подсказка не нужна; см. markCalcChanged и
+  // общий слушатель в common-print.js).
+  markCalcChanged(); // вернули как было - снова «Расчёт выполнен» (см. common-print.js)
 }
 
 function onThicknessCheckboxChange(el){
@@ -3894,7 +4611,7 @@ updateThicknessSummary();
 // файлами (в I-3 - разные файлы из-за разной толщины доски дна, см.
 // src/variants/), а простой переключатель на одной странице - доска дна
 // пересчитывается на лету через параметр fasteningType в computeGost10198II1().
-const FASTENING_STORAGE_KEY = 'gost10198-ii1-fastening-type';
+const FASTENING_STORAGE_KEY = 'silvan-gost10198-ii1-fastening-type';
 const FASTENING_LABELS = {
   skid:         'Крепление за полозья',
   floor_boards: 'Крепление к доскам дна'
@@ -3946,7 +4663,7 @@ function onSkidForkliftExclusive(el){
 // просьбе пользователя: все чекбоксы/переключатели опций должны запоминаться
 // между заходами, как уже давно работает для толщин "в наличии" и способа
 // крепления.
-const OPTIONS_STORAGE_PREFIX = 'gost10198-ii1-opt-';
+const OPTIONS_STORAGE_PREFIX = 'silvan-gost10198-ii1-opt-';
 function persistCheckbox(id){
   const el = document.getElementById(id);
   if(!el) return;
@@ -4067,8 +4784,7 @@ function computeGost10198II1(input){
     warnings.push('Масса груза вне диапазона типа II-1 (≤20000 кг) — расчёт продолжен по крайнему значению.');
   }
   // ГОСТ 10198-91 в целом (п.1.1) распространяется на грузы массой от 200 до
-  // 20000 кг - верхняя граница уже проверена выше (совпадает с максимумом
-  // самого типа II-1), а нижняя (200 кг) раньше не проверялась вовсе.
+  // 20000 кг - нижняя граница раньше не проверялась.
   if(MASS < 200){
     warnings.push(`Масса груза ${MASS} кг менее 200 кг — вне области распространения ГОСТ 10198-91 в целом (200–20000 кг). Расчёт продолжен, но результат нужно перепроверить.`);
   }
@@ -4246,14 +4962,12 @@ function computeGost10198II1(input){
   if(subfloorForkliftFail){
     warnings.push(`Погрузка погрузчиком требует ≥300 мм у подполозной доски (сейчас ${Math.round(k10)} мм).`);
   }
-  // Толщина/ширина/количество всегда считаются и показываются как обычно (по
-  // уточнению пользователя) - от длины они не зависят и сами по себе верны,
-  // даже если длина получилась недопустимой; в таблице ⚠ ставится ТОЛЬКО в
-  // колонке длины - либо когда k10<=0 (длина/ширина груза выбраны так, что
-  // вычесть 400мм уже не из чего - типичный признак того, что длина и ширина
-  // перепутаны местами; findNegativeField не ловит ровно 0, только
-  // отрицательные), либо когда включена "Погрузка авто/электропогрузчиком" и
-  // требование ≥300мм не выполняется.
+  // Толщина/ширина/количество всегда считаются и показываются как обычно -
+  // от длины они не зависят и сами по себе верны; в таблице ⚠ ставится
+  // ТОЛЬКО в колонке длины - либо когда k10<=0 (типичный признак того, что
+  // длина и ширина перепутаны местами; findNegativeField не ловит ровно 0,
+  // только отрицательные), либо когда включена "Погрузка
+  // авто/электропогрузчиком" и требование ≥300мм не выполняется.
   const subfloorInvalidLength = k10 <= 0;
   const subfloorLengthWarn = subfloorInvalidLength || subfloorForkliftFail;
 
@@ -4288,8 +5002,8 @@ function computeGost10198II1(input){
   if(!removeFloorBoards){
     if(l12>0) dno.push({name:'Доска дна', t:t12, w:w12, l:k12, qty:l12, overrideKey:'floorBoardT'});
     fbDno.extra.forEach((e,i)=>{
-      const suffix = fbDno.extra.length > 1 ? ' '+(i+1) : '';
-      dno.push({name:'Доска дна (дополнительная)'+suffix, t:t12, w:e.width, l:k12, qty:e.qty});
+      const suffix = fbDno.extra.length > 1 ? ' ' + (i+1) : '';
+      dno.push({name:'Доска дна (дополнительная)'+suffix, t:t12, w:e.width, l:k12, qty:e.qty, overrideKey:'floorBoardT'});
     });
     if(fbDno.warn){
       warnings.push('Доска дна: остаток — нестандартная ширина (вне 75–99 мм).');
@@ -4327,8 +5041,8 @@ function computeGost10198II1(input){
   const t20 = skin.value, w20 = 100, l20 = fbKryshka.mainQty, k20 = lidBoardLen;
   if(l20>0) kryshka.push({name:'Доска крышки', t:t20, w:w20, l:k20, qty:l20, overrideKey:'skinValue'});
   fbKryshka.extra.forEach((e,i)=>{
-    const suffix = fbKryshka.extra.length > 1 ? ' '+(i+1) : '';
-    kryshka.push({name:'Доска крышки (дополнительная)'+suffix, t:t20, w:e.width, l:k20, qty:e.qty});
+    const suffix = fbKryshka.extra.length > 1 ? ' ' + (i+1) : '';
+    kryshka.push({name:'Доска крышки (дополнительная)'+suffix, t:t20, w:e.width, l:k20, qty:e.qty, overrideKey:'skinValue'});
   });
   if(fbKryshka.warn){
     warnings.push('Доска крышки: остаток — нестандартная ширина (вне 75–99 мм).');
@@ -4493,13 +5207,13 @@ function computeGost10198II1(input){
 
   const endPanel = [
     {name:'Стойка', t:t30, w:w30, l:k30, qty:l30, overrideKey:'tStojka'},
-    {name:'Горизонтальный брус', t:t31, w:w31, l:k31, qty:l31},
+    {name:'Горизонтальный брус', t:t31, w:w31, l:k31, qty:l31, overrideKey:'tStojka'},
   ];
   if(torecFrame.hasRaskosina) endPanel.push({name:'Раскосина', t:t_raskosina, w:w_raskosina, l:k33, qty:l33, overrideKey:'tRaskosina'});
-  if(l32>0) endPanel.push({name:'Доска', t:t32, w:w32, l:k32, qty:l32});
+  if(l32>0) endPanel.push({name:'Доска', t:t32, w:w32, l:k32, qty:l32, overrideKey:'skinValue'});
   fbTorec.extra.forEach((e,i)=>{
-    const suffix = fbTorec.extra.length > 1 ? ' '+(i+1) : '';
-    endPanel.push({name:'Доска (дополнительная)'+suffix, t:t32, w:e.width, l:k32, qty:e.qty*torecFrame.floors});
+    const suffix = fbTorec.extra.length > 1 ? ' ' + (i+1) : '';
+    endPanel.push({name:'Доска (дополнительная)'+suffix, t:t32, w:e.width, l:k32, qty:e.qty*torecFrame.floors, overrideKey:'skinValue'});
   });
 
   const volTorPanel = vol(t30,w30,k30,l30) + vol(t31,w31,k31,l31)
@@ -4539,15 +5253,15 @@ function computeGost10198II1(input){
   }
 
   const bokovoy = [
-    {name:'Стойка', t:t40, w:w40, l:k40, qty:l40},
+    {name:'Стойка', t:t40, w:w40, l:k40, qty:l40, overrideKey:'tStojka'},
   ];
-  if(l43>0) bokovoy.push({name:'Горизонтальный брус', t:t43, w:w43, l:k43, qty:l43});
-  if(bokFrame.hasRaskosina) bokovoy.push({name:'Раскосина', t:t_raskosina, w:w_raskosina, l:k42, qty:l42});
-  bokovoy.push({name:'Опорная планка', t:t_opora, w:w_opora, l:k_opora, qty:l_opora});
-  if(l41>0) bokovoy.push({name:'Доска', t:t41, w:w41, l:k41, qty:l41});
+  if(l43>0) bokovoy.push({name:'Горизонтальный брус', t:t43, w:w43, l:k43, qty:l43, overrideKey:'tStojka'});
+  if(bokFrame.hasRaskosina) bokovoy.push({name:'Раскосина', t:t_raskosina, w:w_raskosina, l:k42, qty:l42, overrideKey:'tRaskosina'});
+  bokovoy.push({name:'Опорная планка', t:t_opora, w:w_opora, l:k_opora, qty:l_opora, overrideKey:'skinValue'});
+  if(l41>0) bokovoy.push({name:'Доска', t:t41, w:w41, l:k41, qty:l41, overrideKey:'skinValue'});
   fbBok.extra.forEach((e,i)=>{
-    const suffix = fbBok.extra.length > 1 ? ' '+(i+1) : '';
-    bokovoy.push({name:'Доска (дополнительная)'+suffix, t:t41, w:e.width, l:k41, qty:e.qty*bokFrame.floors});
+    const suffix = fbBok.extra.length > 1 ? ' ' + (i+1) : '';
+    bokovoy.push({name:'Доска (дополнительная)'+suffix, t:t41, w:e.width, l:k41, qty:e.qty*bokFrame.floors, overrideKey:'skinValue'});
   });
 
   const volBokPanel = vol(t40,w40,k40,l40) + vol(t43,w43,k43,l43)
@@ -4621,14 +5335,15 @@ function readManualOverrides(){
   return overrides;
 }
 
-function calculate(){
-  const errEl = document.getElementById('err');
-  errEl.textContent = '';
+// Входные данные расчёта - в том виде, в каком они уходят в расчёт.
+// Вынесены из calculateNow(), чтобы по ним же сравнивать текущее
+// состояние формы с последним успешным расчётом (см. calcStateSignature
+// в common-print.js).
+function buildCalcInput(){
   const manualOverrides = readManualOverrides();
-  setCalcStatus(null);
 
   const removeFloorBoardsEl = document.getElementById('removeFloorBoards');
-  const input = {
+  return {
     L: parseFloat(document.getElementById('L').value),
     W: parseFloat(document.getElementById('W').value),
     H: parseFloat(document.getElementById('H').value),
@@ -4643,6 +5358,17 @@ function calculate(){
     optimizeSizes: document.getElementById('optimizeSizes').checked,
     manualOverrides,
   };
+}
+
+// Сам расчёт и рендер; кнопка «Рассчитать» вызывает общую обёртку
+// calculate() из common-print.js (индикатор «Идёт расчёт…», защита от
+// повторного запуска, блокировка печати на время расчёта).
+function calculateNow(){
+  const errEl = document.getElementById('err');
+  errEl.textContent = '';
+  const input = buildCalcInput();
+  const manualOverrides = input.manualOverrides;
+  const tableEdits = readTableEdits(); // см. applyTableEdits в common-print.js
 
   const calc = computeGost10198II1(input);
   if(calc.error){
@@ -4654,6 +5380,11 @@ function calculate(){
     document.getElementById('results').style.display = 'none';
     return;
   }
+  // Ручные правки таблицы (ширина/длина/кол-во и т.д.) - учитываются только
+  // здесь, по кнопке "Рассчитать" (см. applyTableEdits в common-print.js).
+  if(applyTableEdits(calc, tableEdits, {dno:1, kryshka:1, endPanel:2, bokovoy:2})){
+    calc.normaVremeni = computeNormaVremeni(calc.totalVolume, TIME_SETTINGS_STORAGE_KEY);
+  }
 
   document.getElementById('outDims').innerHTML = `${Math.round(calc.outerL)} × ${Math.round(calc.outerW)} × ${Math.round(calc.outerH)} <span>мм</span>`;
   document.getElementById('outVolume').innerHTML = `${calc.totalVolume.toFixed(3)} <span>м³</span>`;
@@ -4663,18 +5394,19 @@ function calculate(){
   // размер/количество детали): толщина раскосины (t_stojka*2/3) и т.п. дают
   // дробные мм без этого округления.
   function displayVal(v){ return typeof v === 'number' ? ceilInt(v) : v; }
-  function renderSection(title, rows){
+  function renderSection(title, rows, sectionKey){
     let html = title ? `<div class="part-title">${title}</div>` : '';
-    html += `<div class="spec-table"><table>
+    html += `<div class="spec-table"><table data-section="${sectionKey}">
       <thead><tr><th>Деталь</th><th class="num">Толщина</th><th class="num">Ширина</th><th class="num">Длина</th><th class="num">Кол-во</th></tr></thead><tbody>`;
-    rows.forEach(r=>{
+    const rowKeys = tableRowKeys(rows);
+    rows.forEach((r, i)=>{
       const overrideAttr = r.overrideKey ? ` data-override="${r.overrideKey}"` : '';
-      html += `<tr>
+      html += `<tr data-row-key="${escapeAttr(rowKeys[i])}">
         <td>${r.name}</td>
-        <td class="num editable-cell" contenteditable="true" data-role="t"${overrideAttr}>${displayVal(r.t)}</td>
-        <td class="num editable-cell" contenteditable="true" data-role="w">${displayVal(r.w)}</td>
-        <td class="num editable-cell" contenteditable="true" data-role="l">${displayVal(r.l)}</td>
-        <td class="num editable-cell" contenteditable="true" data-role="qty">${displayVal(r.qty)}</td>
+        <td class="num editable-cell" contenteditable="true" data-role="t"${overrideAttr}${editedAttr(r, 't', manualOverrides)}>${displayVal(r.t)}</td>
+        <td class="num editable-cell" contenteditable="true" data-role="w"${editedAttr(r, 'w')}>${displayVal(r.w)}</td>
+        <td class="num editable-cell" contenteditable="true" data-role="l"${editedAttr(r, 'l')}>${displayVal(r.l)}</td>
+        <td class="num editable-cell" contenteditable="true" data-role="qty"${editedAttr(r, 'qty')}>${displayVal(r.qty)}</td>
       </tr>`;
     });
     html += `</tbody></table></div>`;
@@ -4691,16 +5423,13 @@ function calculate(){
   // --dk недостаточно, чтобы подписи не выглядели явно крупнее, чем на
   // остальных чертежах.
   let tablesHtml = '';
-  tablesHtml += `<div class="part-title">Дно</div><div class="spec-row-diagram"><div class="diagram-slot">` + diagramDno(calc.t_stojka, calc.skin.value, calc.W + calc.t_stojka*2, calc.k9Base) + `</div>` + renderSection('', calc.dno) + `</div>`;
-  tablesHtml += `<div class="part-title">Крышка</div><div class="spec-row-diagram"><div class="diagram-slot">` + diagramKryshka(calc.longbeamCount, calc.crossBeamCount, calc.t32Display, calc.sideFrameDisplay, calc.outerW, calc.k9Base, undefined, calc.edgeDistCross) + `</div>` + renderSection('', calc.kryshka) + `</div>`;
-  // data-size-group="ii1-panels" на обоих слотах ниже - синхронизирует их
-  // итоговый масштаб (см. reserveScaleGroups в src/common-print.js): у
-  // Щита торцевого и бокового собственный вылет подписей за рамку фото
-  // отличается от случая к случаю (то у одного заметнее, то у другого),
-  // поэтому без синхронизации они могли получаться заметно разного размера
-  // при одинаковом входе - по репорту пользователя со скриншотом.
-  tablesHtml += `<div class="part-title">Щит торцевой (2 шт.)</div><div class="spec-row-diagram"><div class="diagram-slot" data-size-group="ii1-panels">` + diagramTorec(calc.torecFrame.count, calc.torecFrame.floors, calc.t_longbeam, calc.W + calc.t_stojka*2, calc.skin.value, calc.panelHeightFull, 100 + calc.torecFrame.len, 260, 0.8) + `</div>` + renderSection('', calc.endPanel) + `</div>`;
-  tablesHtml += `<div class="part-title" style="margin-bottom:26px">Щит боковой (2 шт.)</div><div class="spec-row-diagram"><div class="diagram-slot" data-size-group="ii1-panels">` + diagramBok(calc.bokFrame.count, calc.bokFrame.floors, calc.t_longbeam, calc.L, calc.t_stojka, calc.panelHeightFull, 100 + calc.bokFrame.len, 260, 0.8) + `</div>` + renderSection('', calc.bokovoy) + `</div>`;
+  tablesHtml += `<div class="part-title">Дно</div><div class="spec-row-diagram"><div class="diagram-slot">` + diagramDno(calc.t_stojka, calc.skin.value, calc.W + calc.t_stojka*2, calc.k9Base) + `</div>` + renderSection('', calc.dno, 'dno') + `</div>`;
+  tablesHtml += `<div class="part-title">Крышка</div><div class="spec-row-diagram"><div class="diagram-slot">` + diagramKryshka(calc.longbeamCount, calc.crossBeamCount, calc.t32Display, calc.sideFrameDisplay, calc.outerW, calc.k9Base, undefined, calc.edgeDistCross) + `</div>` + renderSection('', calc.kryshka, 'kryshka') + `</div>`;
+  // Щит торцевой и боковой - каждый своего максимального размера в слоте
+  // (по указанию пользователя, без общего масштаба пары; см.
+  // growDiagramToSlot в common-print.js).
+  tablesHtml += `<div class="part-title">Щит торцевой (2 шт.)</div><div class="spec-row-diagram"><div class="diagram-slot">` + diagramTorec(calc.torecFrame.count, calc.torecFrame.floors, calc.t_longbeam, calc.W + calc.t_stojka*2, calc.skin.value, calc.panelHeightFull, 100 + calc.torecFrame.len, 260, 0.8) + `</div>` + renderSection('', calc.endPanel, 'endPanel') + `</div>`;
+  tablesHtml += `<div class="part-title" style="margin-bottom:26px">Щит боковой (2 шт.)</div><div class="spec-row-diagram"><div class="diagram-slot">` + diagramBok(calc.bokFrame.count, calc.bokFrame.floors, calc.t_longbeam, calc.L, calc.t_stojka, calc.panelHeightFull, 100 + calc.bokFrame.len, 260, 0.8) + `</div>` + renderSection('', calc.bokovoy, 'bokovoy') + `</div>`;
   const boardTablesEl = document.getElementById('boardTables');
   boardTablesEl.innerHTML = tablesHtml;
   const boardImages = Array.from(boardTablesEl.querySelectorAll('img'));
@@ -4731,31 +5460,15 @@ document.querySelectorAll('input[name="lidLayout"]').forEach(el=>{
   el.addEventListener('change', invalidateCalc);
 });
 
-function recalcFromTable(){
-  const rows = document.querySelectorAll('#boardTables table tbody tr');
-  let totalVolume = 0;
-  rows.forEach(tr=>{
-    const t = parseFloat(tr.querySelector('[data-role="t"]').textContent.replace(',','.')) || 0;
-    const w = parseFloat(tr.querySelector('[data-role="w"]').textContent.replace(',','.')) || 0;
-    const l = parseFloat(tr.querySelector('[data-role="l"]').textContent.replace(',','.')) || 0;
-    const qty = parseFloat(tr.querySelector('[data-role="qty"]').textContent.replace(',','.')) || 0;
-    totalVolume += (t/1000)*(w/1000)*(l/1000)*qty;
-  });
-  const normaVremeni = computeNormaVremeni(totalVolume, TIME_SETTINGS_STORAGE_KEY);
-  document.getElementById('outVolume').innerHTML = `${totalVolume.toFixed(3)} <span>м³</span>`;
-  document.getElementById('outTime').innerHTML = `${normaVremeni} <span>ч</span>`;
-}
 document.getElementById('boardTables').addEventListener('input', e=>{
   if(e.target.classList.contains('editable-cell')){
-    if(e.target.hasAttribute('data-override')){
-      e.target.setAttribute('data-user-edited', 'true');
-    }
-    recalcFromTable();
-    // Ручная правка таблицы делает наружные размеры/чертежи потенциально
-    // устаревшими относительно того, что сейчас в таблице - прячем галочку
-    // расчёта и показываем краткую подсказку (см. invalidateCalc() в
-    // src/ii1/ui.js). При нажатии "Рассчитать" правки толщины (data-override,
-    // отмеченные data-user-edited) будут учтены - см. readManualOverrides().
+    // Правка ячейки НЕ пересчитывает итоги сразу (по указанию пользователя) -
+    // только помечает ячейку как исправленную и расчёт как устаревший
+    // (подсказка «Нажмите «Рассчитать»»); учтётся при нажатии "Рассчитать" (толщина с
+    // data-override - через readManualOverrides(), остальное - через
+    // readTableEdits(), см. common-print.js).
+    markCellEdited(e.target); syncOverrideCells(e.target);
+    updateResetButton();
     invalidateCalc();
   }
 });
@@ -4813,7 +5526,7 @@ function buildPrintHtml(){
   return `
     <img class="print-watermark" src="${LOGO_B64}" alt="">
 
-    <h1>ГОСТ 10198-91 · тип II-1</h1>
+    <h1>ГОСТ 10198-91 · тип II-1${boxNameHtml()}</h1>
     <div class="print-subtitle">Каркасно-щитовой неразборный плотный ящик</div>
 
     <div class="part-title">Общий вид ящика</div>
@@ -4848,6 +5561,16 @@ function buildPrintHtml(){
 // Общий вид ящика показываем и на самом сайте, не только в печати.
 document.getElementById('boxView').src = BOX_II1_IMG_B64;
 initTimeSettings(TIME_SETTINGS_STORAGE_KEY);
+
+// Поля, из-за которых расчёт заблокирован (по тексту ошибки) - подсвечиваются
+// красной рамкой (см. highlightErrorFields в common-print.js).
+function errorFieldsFor(text){
+  if(/Заполните все поля/.test(text)) return ['L','W','H','M'].filter(id => !(parseFloat(document.getElementById(id).value) > 0));
+  if(/Ширина груза/.test(text)) return ['W'];
+  if(/Длина груза/.test(text)) return ['L'];
+  if(/высота груза/.test(text)) return ['H'];
+  return [];
+}
 
 </script>
 </body>
