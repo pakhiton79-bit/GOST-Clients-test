@@ -63,7 +63,13 @@ h1{font:700 20px/1.15 Unbounded,sans-serif;margin:0 0 4px;letter-spacing:-.01em}
 .pop h3{font:600 15px/1.25 Onest,sans-serif;margin:0 0 6px}
 .pop .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
 .tag{font:500 11px/1 Onest;padding:4px 7px;border-radius:999px;color:#fff}
-.pop .d{color:var(--muted);margin:0 0 8px}
+.pop .d{color:var(--ink);margin:0 0 8px;white-space:pre-line;max-height:160px;overflow:auto}
+.pop .gal{display:flex;gap:6px;overflow-x:auto;margin:0 0 8px;padding-bottom:2px}
+.pop .gal a,.pop .gal video{flex:none;width:96px;height:72px;border-radius:8px;overflow:hidden;background:var(--surface-2);display:block}
+.pop .gal img,.pop .gal video{width:100%;height:100%;object-fit:cover;display:block}
+.pop .ext{display:grid;gap:3px;margin:0 0 8px;font-size:12.5px}
+.pop .ext a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mi{font-size:11px;margin-left:4px}
 .pop .c{font:12px/1 "JetBrains Mono",monospace;color:var(--muted);margin-bottom:8px;cursor:pointer}
 .pop .pl{font-family:Onest;font-weight:500;color:var(--ink)}
 .pop .lnk{display:flex;gap:10px}
@@ -134,7 +140,7 @@ const DATA=`
 Заброшенная котельная|56 51 55.33|60 43 53.41|O|0|3|
 Закрытый элеватор|56 43 42.15|60 44 41.15|F|2|3|
 Закрытый элеватор|56 47 36.30|60 44 07.26|F|1|3|
-Заброшенная котельная|56 47 36.09|60 44 21.62|F|1|2|
+Заброшенная котельная|56 47 36.09|60 44 21.62|F|1|3|
 Закрытый завод|56 52 59.66|60 36 24.82|F|2|3|
 Заброшенный цех|56 52 52.36|60 36 31.22|F|2|3|
 Заброшенные цеха|57 29 29.59|60 13 31.83|F|1|2|
@@ -195,9 +201,12 @@ const SEC=[{name:'Нет охраны',color:'var(--g-none)'},{name:'Незна�
 const INT=[{name:'Не оценено'},{name:'★'},{name:'★★'},{name:'★★★'}];
 
 const PLACES=["Исеть","ГО Первоуральск","Дружинино","Екатеринбург","Екатеринбург","Большой Исток","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Невьянск","Екатеринбург","Екатеринбург","Екатеринбург","Первоуральск","Екатеринбург","Колос","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Исеть","Исеть","Исеть","Исеть","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Екатеринбург","Нагорный","Прохладный","Екатеринбург","Камышлов","Екатеринбург","Сысертский округ","Белоярский округ","Бобровский","Бобровский","Бобровский","Первоуральск","Реж","Асбест","Первоуральск","Ирбит","Алапаевск","Каменск-Уральский","Екатеринбург","Екатеринбург","Нижний Тагил","Невьянск","Екатеринбург","Ирбит","Екатеринбург"];
+/* ===== ОПИСАНИЯ, ФОТО, ВИДЕО, ССЫЛКИ =====
+   Ключ — номер объекта (как в списке DATA, с 1). Файлы лежат в docs/media/. */
+const EXTRA={};
 const dms=s=>{const[d,m,x]=s.trim().split(/\s+/).map(Number);return d+m/60+x/3600};
 const pts=DATA.trim().split('\n').map((l,i)=>{const[n,la,lo,c,g,k,desc]=l.split('|');
-  return{id:i,name:n,place:PLACES[i],lat:dms(la),lon:dms(lo),c,g:+g,k:+k,desc:(desc||'').trim(),dla:la,dlo:lo}});
+  const x=EXTRA[i+1]||{};return{id:i,name:n,place:PLACES[i],media:x.media||[],links:x.links||[],lat:dms(la),lon:dms(lo),c,g:+g,k:+k,desc:(x.desc??desc??'').trim(),dla:la,dlo:lo}});
 
 /* ===== ЗНАЧКИ (вариант «Щит») ===== */
 const glyph=c=>c==='F'
@@ -241,20 +250,23 @@ const cluster=L.markerClusterGroup({maxClusterRadius:42,disableClusteringAtZoom:
     return L.divIcon({className:'cl',iconSize:[38,38],html:`<div style="--p:${Math.round(f/ms.length*100)}%"><span>${ms.length}</span></div>`})}});
 map.addLayer(cluster);
 
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const coordTxt=p=>`${p.lat.toFixed(5)}, ${p.lon.toFixed(5)}`;
 function popup(p){
   return`<div class="pop"><h3>${p.name}</h3><div class="tags">
   <span class="tag" style="background:${CLS[p.c].color}">${CLS[p.c].name}</span>
   <span class="tag" style="background:${SEC[p.g].color}">${SEC[p.g].name}</span>
   <span class="tag" style="background:var(--muted)">${p.k?'★'.repeat(p.k):'интерес не оценён'}</span></div>
-  ${p.desc?`<p class="d">${p.desc}</p>`:''}
+  ${p.desc?`<p class="d">${esc(p.desc)}</p>`:''}
+  ${p.media.length?`<div class="gal">${p.media.map(m=>/\.(mp4|webm)$/i.test(m)?`<video src="${m}" controls preload="metadata"></video>`:`<a href="${m}" target="_blank" rel="noopener"><img src="${m}" alt="" loading="lazy"></a>`).join('')}</div>`:''}
+  ${p.links.length?`<div class="ext">${p.links.map(u=>`<a target="_blank" rel="noopener" href="${esc(u)}">${esc(u.replace(/^https?:\/\/(www\.)?/,''))}</a>`).join('')}</div>`:''}
   <div class="c" title="Нажмите, чтобы скопировать" onclick="navigator.clipboard&&navigator.clipboard.writeText('${coordTxt(p)}');this.textContent='скопировано ✓'"><span class="pl">${p.place}</span> · ${coordTxt(p)}</div>
   <div class="lnk"><a target="_blank" rel="noopener" href="https://yandex.ru/maps/?pt=${p.lon},${p.lat}&z=17&l=map">Яндекс</a>
   <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lon}">Google</a></div></div>`}
 
 pts.forEach(p=>{
   p.m=L.marker([p.lat,p.lon],{icon:L.divIcon({className:'mk',html:markerSVG(p.c,p.g,p.k),iconSize:[40,56],iconAnchor:[20,50],popupAnchor:[0,-40]}),title:p.name});
-  p.m.p=p;p.m.bindPopup(popup(p));
+  p.m.p=p;p.m.bindPopup(popup(p),{maxWidth:330});
   p.m.on('popupopen',()=>mark(p.id));
 });
 const zoomCls=()=>map.getContainer().classList.toggle('far',map.getZoom()<12);
@@ -289,7 +301,7 @@ function render(){
   const sorted=[...shown].sort((a,b)=>b.k-a.k||b.g-a.g||a.name.localeCompare(b.name,'ru'));
   list.innerHTML=sorted.length?sorted.map(p=>`<div class="row" data-id="${p.id}">
     <svg width="30" height="36" viewBox="-15 -36 30 38"><g transform="scale(.75)">${markerSVG(p.c,p.g,0).replace(/<svg[^>]*>|<\/svg>/g,'').replace(/<g class="st">[\s\S]*?<\/g>/,'')}</g></svg>
-    <div><b>${p.name}</b><small>${p.place} · ${CLS[p.c].name} · ${SEC[p.g].name.toLowerCase()}</small></div>${starTxt(p.k)}</div>`).join('')
+    <div><b>${p.name}${p.media.length?'<span class="mi" title="Есть фото/видео">📷</span>':''}</b><small>${p.place} · ${CLS[p.c].name} · ${SEC[p.g].name.toLowerCase()}</small></div>${starTxt(p.k)}</div>`).join('')
     :'<div class="empty">Ничего не найдено — ослабьте фильтры</div>';
 }
 list.onclick=e=>{const r=e.target.closest('.row');if(!r)return;const p=pts[+r.dataset.id];
