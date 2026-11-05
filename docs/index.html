@@ -234,28 +234,13 @@ const secIco=g=>mini(`<g transform="scale(1.2)">${badge(g)}</g>`);
 const starTxt=k=>k?`<span class="stars">${'★'.repeat(k)}<i>${'★'.repeat(3-k)}</i></span>`:`<span class="stars"><i>★★★</i></span>`;
 
 /* ===== КАРТА ===== */
-const map=L.map('map',{zoomControl:true,attributionControl:true,zoomSnap:0,zoomDelta:1}).setView([56.85,60.6],9);
+const map=L.map('map',{zoomControl:true,attributionControl:true}).setView([56.85,60.6],9);
 const base={
   map:L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}),
   sat:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© Esri'})
 };
 base.map.addTo(map);
 
-/* Зум колесом как в Google Картах: один щелчок = один уровень, плавно и к курсору */
-map.scrollWheelZoom.disable();
-{let target=null,anchor=null,raf=null;
- const step=()=>{const z=map.getZoom(),d=target-z;
-   if(Math.abs(d)<0.005){map.setZoomAround(anchor,target,{animate:false});target=null;raf=null;return}
-   map.setZoomAround(anchor,z+d*0.28,{animate:false});raf=requestAnimationFrame(step)};
- map.getContainer().addEventListener('wheel',e=>{
-   e.preventDefault();
-   let dy=e.deltaY;if(e.deltaMode===1)dy*=33;else if(e.deltaMode===2)dy*=800;
-   if(e.ctrlKey)dy*=3; /* щипок на тачпаде */
-   const from=target??map.getZoom();
-   target=Math.max(map.getMinZoom(),Math.min(map.getMaxZoom(),from-dy/100));
-   anchor=map.mouseEventToContainerPoint(e);
-   if(!raf)raf=requestAnimationFrame(step)},{passive:false});
- map.on('dragstart',()=>{if(raf){cancelAnimationFrame(raf);raf=null;target=null}});}
 map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
 function setBase(k){Object.entries(base).forEach(([n,l])=>{if(n===k)l.addTo(map);else map.removeLayer(l)});
   document.getElementById('b-map').setAttribute('aria-pressed',k==='map');document.getElementById('b-sat').setAttribute('aria-pressed',k==='sat')}
