@@ -235,11 +235,17 @@ const starTxt=k=>k?`<span class="stars">${'★'.repeat(k)}<i>${'★'.repeat(3-k)
 
 /* ===== КАРТА ===== */
 const map=L.map('map',{zoomControl:true,attributionControl:true,zoomSnap:0.25,zoomDelta:1,wheelPxPerZoomLevel:60,wheelDebounceTime:20}).setView([56.85,60.6],9);
+/* Схема — 2ГИС; если его плитки не грузятся, тихо переключаемся на Esri */
+const gis=L.tileLayer('https://tile{s}.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1',{subdomains:'0123',maxZoom:18,attribution:'© 2ГИС'});
+const esri=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© Esri'});
 const base={
-  map:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© Esri'}),
+  map:gis,
   sat:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© Esri'})
 };
 base.map.addTo(map);
+{let ok=0,bad=0;const fallback=()=>{if(base.map!==gis)return;const on=map.hasLayer(gis);base.map=esri;if(on){map.removeLayer(gis);esri.addTo(map)}};
+ gis.on('tileload',()=>ok++);gis.on('tileerror',()=>{if(++bad>=4&&!ok)fallback()});
+ setTimeout(()=>{if(!ok&&map.hasLayer(gis))fallback()},7000);}
 map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
 function setBase(k){Object.entries(base).forEach(([n,l])=>{if(n===k)l.addTo(map);else map.removeLayer(l)});
   document.getElementById('b-map').setAttribute('aria-pressed',k==='map');document.getElementById('b-sat').setAttribute('aria-pressed',k==='sat')}
