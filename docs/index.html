@@ -134,7 +134,7 @@ const DATA=`
 Заброшенная котельная|56 51 55.33|60 43 53.41|O|0|3|
 Закрытый элеватор|56 43 42.15|60 44 41.15|F|2|3|
 Закрытый элеватор|56 47 36.30|60 44 07.26|F|1|3|
-Заброшенная котельная|56 47 36.09|60 44 21.62|F|2|2|
+Заброшенная котельная|56 47 36.09|60 44 21.62|F|1|2|
 Закрытый завод|56 52 59.66|60 36 24.82|F|2|3|
 Заброшенный цех|56 52 52.36|60 36 31.22|F|2|3|
 Заброшенные цеха|57 29 29.59|60 13 31.83|F|1|2|
@@ -147,7 +147,7 @@ const DATA=`
 Старая линза (легально)|56 37 33.52|60 36 21.04|O|0|2|
 Закрытая гостиница (охрана)|56 51 59.97|60 41 18.09|O|2|3|
 Заброшенная вышка освещения|56 46 21.06|60 38 42.87|O|1|3|
-Закрытая котельная|56 52 48.11|60 38 23.79|F|2|0|
+Закрытая котельная|56 52 48.11|60 38 23.79|F|2|1|
 Закрытый цех|56 52 36.29|60 36 01.51|F|2|2|
 Заброшенные цеха|56 52 56.34|60 36 07.79|F|0|3|
 Призма|56 51 23.43|60 35 51.40|O|2|3|
@@ -225,7 +225,7 @@ const secIco=g=>mini(`<g transform="scale(1.2)">${badge(g)}</g>`);
 const starTxt=k=>k?`<span class="stars">${'★'.repeat(k)}<i>${'★'.repeat(3-k)}</i></span>`:`<span class="stars"><i>★★★</i></span>`;
 
 /* ===== КАРТА ===== */
-const map=L.map('map',{zoomControl:true,attributionControl:true}).setView([56.85,60.6],9);
+const map=L.map('map',{zoomControl:true,attributionControl:true,zoomSnap:0.1,zoomDelta:0.5,wheelPxPerZoomLevel:110,wheelDebounceTime:25}).setView([56.85,60.6],9);
 const base={
   map:L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}),
   sat:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© Esri'})
