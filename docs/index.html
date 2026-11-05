@@ -135,7 +135,7 @@ h1{font:700 20px/1.15 Unbounded,sans-serif;margin:0 0 4px;letter-spacing:-.01em}
 const DATA=`
 Заброшенный карьер с техникой|56 58 25.61|60 22 35.32|O|0|3|
 Дидинский тоннель|56 49 07.21|59 41 48.46|O|0|3|
-Недостроенное депо|56 47 48.09|59 30 11.16|O|3|3|
+Недостроенное депо|56 47 48.09|59 30 11.16|F|3|3|
 Заброшенная база отдыха|56 51 45.33|60 41 20.61|O|3|3|
 Заброшенная котельная|56 51 55.33|60 43 53.41|O|0|3|
 Закрытый элеватор|56 43 42.15|60 44 41.15|F|2|3|
@@ -236,7 +236,7 @@ const starTxt=k=>k?`<span class="stars">${'★'.repeat(k)}<i>${'★'.repeat(3-k)
 /* ===== КАРТА ===== */
 const map=L.map('map',{zoomControl:true,attributionControl:true,zoomSnap:0.25,zoomDelta:1,wheelPxPerZoomLevel:60,wheelDebounceTime:20}).setView([56.85,60.6],9);
 const base={
-  map:L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}),
+  map:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© Esri'}),
   sat:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© Esri'})
 };
 base.map.addTo(map);
